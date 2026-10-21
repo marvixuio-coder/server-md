@@ -9,7 +9,7 @@ export const Route = createFileRoute("/api/chat")({
   server: {
     handlers: {
       POST: async ({ request }) => {
-        const apiKey = process.env.LOVABLE_API_KEY;
+        const apiKey = process.env["LOVABLE_API_KEY"];
         if (!apiKey) return new Response("Missing LOVABLE_API_KEY", { status: 500 });
         const body = (await request.json()) as { messages?: UIMessage[] };
         if (!Array.isArray(body.messages)) return new Response("Bad request", { status: 400 });
