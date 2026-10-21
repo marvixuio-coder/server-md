@@ -1,7 +1,7 @@
 import { useState } from "react";
 
 type Cell = "X" | "O" | null;
-const LINES = [
+const LINES: [number, number, number][] = [
   [0, 1, 2], [3, 4, 5], [6, 7, 8],
   [0, 3, 6], [1, 4, 7], [2, 5, 8],
   [0, 4, 8], [2, 4, 6],
@@ -30,8 +30,8 @@ function minimax(b: Cell[], ai: boolean): number {
 
 function aiMove(b: Cell[]): number {
   const free = b.map((v, i) => (v ? -1 : i)).filter((i) => i >= 0);
-  if (Math.random() < 0.25) return free[Math.floor(Math.random() * free.length)];
-  let best = -2, move = free[0];
+  if (Math.random() < 0.25) return free[Math.floor(Math.random() * free.length)] ?? 0;
+  let best = -2, move = free[0] ?? 0;
   for (const i of free) {
     b[i] = "O";
     const s = minimax(b, false);
