@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 
 import {
   ServerCard,
@@ -6,7 +6,6 @@ import {
   ServerTag,
   ServerText,
 } from "@/components/server-card";
-import { TicTacToe } from "@/components/tic-tac-toe";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -80,6 +79,12 @@ function Index() {
             <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
               فريقك جاهز في أي وقت، العب وتحدّى وكوّن أقوى سكواد
             </p>
+            <Link
+              to="/games"
+              className="mt-4 inline-block rounded-full bg-primary px-4 py-1.5 text-sm font-semibold text-primary-foreground hover:opacity-90"
+            >
+              العب الحين
+            </Link>
           </div>
           <div className="rounded-2xl border bg-card p-5 text-center">
             <div className="text-3xl">🎉</div>
@@ -95,12 +100,6 @@ function Index() {
               ناس رايقة وسوالف حلوة، تدخل غريب وتطلع واحد منّا
             </p>
           </div>
-        </section>
-
-        <section className="mt-10 w-full rounded-2xl border bg-card p-6 text-center">
-          <h3 className="font-display text-2xl font-bold">بدأ التحدي</h3>
-          <p className="mt-2 mb-5 text-sm text-muted-foreground">العب X O ضد الذكاء الاصطناعي</p>
-          <TicTacToe />
         </section>
 
         <footer className="mt-14 text-sm text-muted-foreground">نشوفك داخل السيرفر 👋</footer>
