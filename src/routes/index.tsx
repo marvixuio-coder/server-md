@@ -6,6 +6,7 @@ import {
   ServerTag,
   ServerText,
 } from "@/components/server-card";
+import { TicTacToe } from "@/components/tic-tac-toe";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -94,6 +95,12 @@ function Index() {
               ناس رايقة وسوالف حلوة، تدخل غريب وتطلع واحد منّا
             </p>
           </div>
+        </section>
+
+        <section className="mt-10 w-full rounded-2xl border bg-card p-6 text-center">
+          <h3 className="font-display text-2xl font-bold">بدأ التحدي</h3>
+          <p className="mt-2 mb-5 text-sm text-muted-foreground">العب X O ضد الذكاء الاصطناعي</p>
+          <TicTacToe />
         </section>
 
         <footer className="mt-14 text-sm text-muted-foreground">نشوفك داخل السيرفر 👋</footer>
