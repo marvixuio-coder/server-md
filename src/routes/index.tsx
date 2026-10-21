@@ -57,6 +57,18 @@ function Index() {
           </ServerCard>
         </ul>
 
+        <div className="mt-8 flex flex-col items-center gap-3 rounded-2xl border bg-card p-5">
+          <img
+            src="https://api.qrserver.com/v1/create-qr-code/?size=360x360&margin=10&data=https%3A%2F%2Fdiscord.gg%2FahRGXk3n2"
+            alt="رمز QR لدخول السيرفر"
+            width={180}
+            height={180}
+            className="rounded-xl bg-background"
+            loading="lazy"
+          />
+          <p className="text-sm text-muted-foreground">امسح الرمز بجوالك وادخل السيرفر</p>
+        </div>
+
         <footer className="mt-14 text-sm text-muted-foreground">نشوفك داخل السيرفر 👋</footer>
       </div>
     </main>
