@@ -62,7 +62,7 @@ function Index() {
             <ServerText>لعب جماعي، بطولات، وتيمات لكل الألعاب</ServerText>
           </ServerCard>
 
-          <ServerCard href="https://discord.gg/your-dev-invite" emoji="\n">
+          <ServerCard href="https://discord.gg/your-dev-invite" emoji="\n" wide>
             <ServerTag>تقنية</ServerTag>
             <ServerName>{"\n"}</ServerName>
             <ServerText>مساعدة، مشاريع، ومشاركة أكواد مع المبرمجين</ServerText>

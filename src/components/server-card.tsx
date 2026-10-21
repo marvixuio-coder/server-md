@@ -13,13 +13,15 @@ export function ServerCard({
   href,
   emoji,
   children,
+  wide,
 }: {
   href: string;
   emoji: string;
   children: ReactNode;
+  wide?: boolean;
 }) {
   return (
-    <li className="animate-rise">
+    <li className={wide ? "animate-rise sm:col-span-2" : "animate-rise"}>
       <a
         href={href}
         target="_blank"
