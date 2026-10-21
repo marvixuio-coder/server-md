@@ -50,7 +50,7 @@ function Index() {
 
         {/* كل خانة = سيرفر. لإضافة سيرفر انسخ خانة كاملة وغيّر الرابط والنصوص */}
         <ul className="mt-12 grid w-full gap-4 sm:grid-cols-2">
-          <ServerCard href="https://discord.gg/your-main-invite" emoji="🏠">
+          <ServerCard href="https://discord.gg/ahRGXk3n2" emoji="🏠" wide>
             <ServerTag>عام</ServerTag>
             <ServerName>السيرفر الرئيسي</ServerName>
             <ServerText>المجتمع العام، سوالف ونقاشات وفعاليات أسبوعية</ServerText>
@@ -62,7 +62,7 @@ function Index() {
             <ServerText>لعب جماعي، بطولات، وتيمات لكل الألعاب</ServerText>
           </ServerCard>
 
-          <ServerCard href="https://discord.gg/your-dev-invite" emoji="\n" wide>
+          <ServerCard href="https://discord.gg/your-dev-invite" emoji="\n">
             <ServerTag>تقنية</ServerTag>
             <ServerName>{"\n"}</ServerName>
             <ServerText>مساعدة، مشاريع، ومشاركة أكواد مع المبرمجين</ServerText>
