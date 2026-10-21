@@ -77,7 +77,8 @@ function Index() {
             <div className="text-3xl">🎮</div>
             <h3 className="mt-3 font-display text-xl font-semibold">جيمنج</h3>
             <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-              فريقك جاهز في أي وقت، العب وتحدّى وكوّن أقوى سكواد
+              فريقك جاهز في أي وقت، العب وتحدّى وكوّن أقوى سكواد 
+وحته هنا تقدر تلعب 
             </p>
             <Link
               to="/games"
