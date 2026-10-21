@@ -29,8 +29,12 @@ function Index() {
       <div className="bg-grid pointer-events-none absolute inset-0" />
 
       <div className="relative mx-auto flex max-w-3xl flex-col items-center px-5 pt-20 pb-16">
-        <div className="animate-rise flex size-20 items-center justify-center rounded-3xl bg-primary text-primary-foreground shadow-[var(--shadow-glow)]">
-          <DiscordLogo className="size-11" />
+        <div
+          dir="ltr"
+          className="animate-rise flex h-32 w-full max-w-md items-center justify-center rounded-3xl border px-6 text-center font-display text-2xl font-bold tracking-wide shadow-[var(--shadow-glow)] sm:text-3xl"
+          style={{ backgroundColor: "#000", color: "#fff" }}
+        >
+          welcome to the MD
         </div>
 
         <h1 className="animate-rise mt-7 font-display text-5xl font-bold tracking-tight sm:text-6xl">
