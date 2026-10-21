@@ -72,6 +72,30 @@ function Index() {
           <p className="text-sm text-muted-foreground">امسح الرمز بجوالك وادخل السيرفر</p>
         </div>
 
+        <section className="mt-10 grid w-full gap-4 sm:grid-cols-3">
+          <div className="rounded-2xl border bg-card p-5 text-center">
+            <div className="text-3xl">🎮</div>
+            <h3 className="mt-3 font-display text-xl font-semibold">جيمنج</h3>
+            <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+              فريقك جاهز في أي وقت، العب وتحدّى وكوّن أقوى سكواد
+            </p>
+          </div>
+          <div className="rounded-2xl border bg-card p-5 text-center">
+            <div className="text-3xl">🎉</div>
+            <h3 className="mt-3 font-display text-xl font-semibold">فعاليات</h3>
+            <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+              بطولات ومسابقات وجوائز كل أسبوع، ولا لحظة ملل
+            </p>
+          </div>
+          <div className="rounded-2xl border bg-card p-5 text-center">
+            <div className="text-3xl">🤝</div>
+            <h3 className="mt-3 font-display text-xl font-semibold">مجتمع</h3>
+            <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+              ناس رايقة وسوالف حلوة، تدخل غريب وتطلع واحد منّا
+            </p>
+          </div>
+        </section>
+
         <footer className="mt-14 text-sm text-muted-foreground">نشوفك داخل السيرفر 👋</footer>
       </div>
     </main>
