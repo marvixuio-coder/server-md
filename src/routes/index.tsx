@@ -67,12 +67,6 @@ function Index() {
             <ServerName>{"\n"}</ServerName>
             <ServerText>مساعدة، مشاريع، ومشاركة أكواد مع المبرمجين</ServerText>
           </ServerCard>
-
-          <ServerCard href="https://discord.gg/your-design-invite" emoji="🎨">
-            <ServerTag>إبداع</ServerTag>
-            <ServerName>سيرفر التصميم</ServerName>
-            <ServerText>شارك أعمالك واحصل على آراء من المصممين</ServerText>
-          </ServerCard>
         </ul>
 
         <footer className="mt-14 text-sm text-muted-foreground">نشوفك داخل السيرفر 👋</footer>
