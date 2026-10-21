@@ -30,7 +30,7 @@ function minimax(b: Cell[], ai: boolean): number {
 
 function aiMove(b: Cell[]): number {
   const free = b.map((v, i) => (v ? -1 : i)).filter((i) => i >= 0);
-  if (Math.random() < 0.25) return free[Math.floor(Math.random() * free.length)] ?? 0;
+  if (Math.random() < 0.45) return free[Math.floor(Math.random() * free.length)] ?? 0;
   let best = -2, move = free[0] ?? 0;
   for (const i of free) {
     b[i] = "O";
