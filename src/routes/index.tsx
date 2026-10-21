@@ -34,10 +34,10 @@ function Index() {
         </div>
 
         <h1 className="animate-rise mt-7 font-display text-5xl font-bold tracking-tight sm:text-6xl">
-          روابطي
+          MD
         </h1>
         <p className="animate-rise mt-4 max-w-md text-center text-lg text-muted-foreground">
-          كل سيرفراتي على ديسكورد في مكان واحد — اختر وادخل مباشرة
+          بي انتظارك في سيرفر ياحلو
         </p>
 
         <div className="animate-rise mt-5 inline-flex items-center gap-2 rounded-full border bg-secondary/60 px-4 py-1.5 text-sm text-muted-foreground">
@@ -52,7 +52,7 @@ function Index() {
         <ul className="mt-12 grid w-full gap-4 sm:grid-cols-2">
           <ServerCard href="https://discord.gg/ahRGXk3n2" emoji="🏠" wide>
             <ServerTag>عام</ServerTag>
-            <ServerName>السيرفر الرئيسي</ServerName>
+            <ServerName>discored</ServerName>
             <ServerText>المجتمع العام، سوالف ونقاشات وفعاليات أسبوعية</ServerText>
           </ServerCard>
         </ul>
