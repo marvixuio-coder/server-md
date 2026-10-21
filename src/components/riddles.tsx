@@ -14,7 +14,7 @@ const RIDDLES = [
 export function Riddles() {
   const [i, setI] = useState(0);
   const [show, setShow] = useState(false);
-  const r = RIDDLES[i];
+  const r = RIDDLES[i] ?? RIDDLES[0]!;
   return (
     <div className="flex flex-col items-center gap-4">
       <p className="font-display text-xl font-semibold">{r.q}</p>
