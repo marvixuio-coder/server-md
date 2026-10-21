@@ -28,8 +28,8 @@ export function ServerCard({
         rel="noopener noreferrer"
         className="server-card group relative flex h-full flex-col rounded-2xl border p-5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
       >
-        <div className="flex size-14 items-center justify-center rounded-2xl bg-muted text-3xl">
-          {emoji}
+        <div className="flex size-14 items-center justify-center rounded-2xl bg-primary text-primary-foreground" data-emoji={emoji}>
+          <DiscordLogo className="size-8" />
         </div>
         <div className="flex flex-1 flex-col">{children}</div>
         <div className="mt-5 flex items-center justify-between rounded-xl bg-primary px-4 py-3 font-semibold text-primary-foreground transition-colors group-hover:bg-accent group-hover:text-accent-foreground">
