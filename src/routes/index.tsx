@@ -79,12 +79,6 @@ function Index() {
             <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
               فريقك جاهز في أي وقت، العب وتحدّى وكوّن أقوى سكواد
             </p>
-            <Link
-              to="/games"
-              className="mt-4 inline-block rounded-full bg-primary px-4 py-1.5 text-sm font-semibold text-primary-foreground hover:opacity-90"
-            >
-              العب الحين
-            </Link>
           </div>
           <div className="rounded-2xl border bg-card p-5 text-center">
             <div className="text-3xl">🎉</div>
@@ -101,6 +95,25 @@ function Index() {
             </p>
           </div>
         </section>
+
+        <Link
+          to="/games"
+          aria-label="الألعاب: X O وألغاز"
+          className="group mt-12 flex size-40 flex-col items-center justify-center rounded-full border-4 border-primary bg-card shadow-[var(--shadow-glow)] transition hover:scale-105"
+        >
+          <div dir="ltr" className="grid grid-cols-3 gap-1 text-2xl font-bold leading-none">
+            <span />
+            <span className="text-online">△</span>
+            <span />
+            <span className="text-primary">□</span>
+            <span />
+            <span className="text-destructive">○</span>
+            <span />
+            <span className="text-primary">✕</span>
+            <span />
+          </div>
+          <span className="mt-2 text-sm font-semibold">X O وألغاز</span>
+        </Link>
 
         <footer className="mt-14 text-sm text-muted-foreground">نشوفك داخل السيرفر 👋</footer>
       </div>
