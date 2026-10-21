@@ -112,6 +112,14 @@ function Index() {
             <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
               ناس رايقة وسوالف حلوة، تدخل غريب وتطلع واحد منّا
             </p>
+            <Link
+              to="/chat"
+              aria-label="سولف مع روبو MD"
+              className="mx-auto mt-4 flex size-28 flex-col items-center justify-center gap-1 rounded-3xl border-2 border-primary bg-primary/15 transition hover:scale-105"
+            >
+              <span className="text-4xl">🤖</span>
+              <span className="text-xs font-semibold">كلّم الروبوت</span>
+            </Link>
           </div>
         </section>
 
