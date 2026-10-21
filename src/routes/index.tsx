@@ -55,18 +55,6 @@ function Index() {
             <ServerName>السيرفر الرئيسي</ServerName>
             <ServerText>المجتمع العام، سوالف ونقاشات وفعاليات أسبوعية</ServerText>
           </ServerCard>
-
-          <ServerCard href="https://discord.gg/your-gaming-invite" emoji="🎮">
-            <ServerTag>ألعاب</ServerTag>
-            <ServerName>سيرفر القيمنق</ServerName>
-            <ServerText>لعب جماعي، بطولات، وتيمات لكل الألعاب</ServerText>
-          </ServerCard>
-
-          <ServerCard href="https://discord.gg/your-dev-invite" emoji="\n">
-            <ServerTag>تقنية</ServerTag>
-            <ServerName>{"\n"}</ServerName>
-            <ServerText>مساعدة، مشاريع، ومشاركة أكواد مع المبرمجين</ServerText>
-          </ServerCard>
         </ul>
 
         <footer className="mt-14 text-sm text-muted-foreground">نشوفك داخل السيرفر 👋</footer>
