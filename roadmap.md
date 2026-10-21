@@ -1,4 +1,5 @@
 # Roadmap
 
 - [x] Discord links page with a card per server (Arabic, RTL)
-- [ ] Let the owner edit server names/links manually (awaiting user's choice of how)
+- [x] Owner can edit names/descriptions directly on the page (Visual Edits)
+- [ ] Replace sample invite links with the owner's real Discord links (waiting on the links)

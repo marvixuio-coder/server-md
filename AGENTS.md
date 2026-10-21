@@ -10,5 +10,5 @@
 <!-- LOVABLE:END -->
 
 ## Project rules
-- Discord server cards are data-driven from `src/lib/servers.ts`; edit that list rather than the page markup, so adding a server never touches layout code.
+- Server cards are written as literal JSX text in `src/routes/index.tsx` (via `ServerCard` slot components) so the owner can edit text directly with Visual Edits; keep card text as literal JSX children, not data arrays or string props.
 - The site is Arabic, RTL (`dir="rtl"` on `<html>`); use logical spacing and mirror directional icons.
