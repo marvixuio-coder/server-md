@@ -60,17 +60,14 @@ function Index() {
           </ServerCard>
         </ul>
 
-        <div className="mt-8 flex flex-col items-center gap-3 rounded-2xl border bg-card p-5">
-          <img
-            src="https://api.qrserver.com/v1/create-qr-code/?size=360x360&margin=10&data=https%3A%2F%2Fdiscord.gg%2FahRGXk3n2"
-            alt="رمز QR لدخول السيرفر"
-            width={180}
-            height={180}
-            className="rounded-xl bg-background"
-            loading="lazy"
-          />
-          <p className="text-sm text-muted-foreground">امسح الرمز بجوالك وادخل السيرفر</p>
-        </div>
+        <Link
+          to="/qr"
+          aria-label="اعرض رمز QR"
+          className="mt-8 flex size-20 flex-col items-center justify-center rounded-full border-2 border-primary bg-card shadow-[var(--shadow-glow)] transition hover:scale-105"
+        >
+          <span className="text-2xl">📱</span>
+          <span className="text-xs font-semibold">QR</span>
+        </Link>
 
         <section className="mt-10 grid w-full gap-4 sm:grid-cols-3">
           <div className="rounded-2xl border bg-card p-5 text-center">
