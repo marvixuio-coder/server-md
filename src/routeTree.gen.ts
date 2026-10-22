@@ -13,6 +13,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as ChatRouteImport } from './routes/chat'
 import { Route as CommunityRouteImport } from './routes/community'
 import { Route as GamesRouteImport } from './routes/games'
+import { Route as QrRouteImport } from './routes/qr'
 import { Route as ApiChatRouteImport } from './routes/api/chat'
 
 const IndexRoute = IndexRouteImport.update({
@@ -35,6 +36,11 @@ const GamesRoute = GamesRouteImport.update({
   path: '/games',
   getParentRoute: () => rootRouteImport,
 } as any)
+const QrRoute = QrRouteImport.update({
+  id: '/qr',
+  path: '/qr',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiChatRoute = ApiChatRouteImport.update({
   id: '/api/chat',
   path: '/api/chat',
@@ -46,6 +52,7 @@ export interface FileRoutesByFullPath {
   '/chat': typeof ChatRoute
   '/community': typeof CommunityRoute
   '/games': typeof GamesRoute
+  '/qr': typeof QrRoute
   '/api/chat': typeof ApiChatRoute
 }
 export interface FileRoutesByTo {
@@ -53,6 +60,7 @@ export interface FileRoutesByTo {
   '/chat': typeof ChatRoute
   '/community': typeof CommunityRoute
   '/games': typeof GamesRoute
+  '/qr': typeof QrRoute
   '/api/chat': typeof ApiChatRoute
 }
 export interface FileRoutesById {
@@ -61,14 +69,15 @@ export interface FileRoutesById {
   '/chat': typeof ChatRoute
   '/community': typeof CommunityRoute
   '/games': typeof GamesRoute
+  '/qr': typeof QrRoute
   '/api/chat': typeof ApiChatRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/chat' | '/community' | '/games' | '/api/chat'
+  fullPaths: '/' | '/chat' | '/community' | '/games' | '/qr' | '/api/chat'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/chat' | '/community' | '/games' | '/api/chat'
-  id: '__root__' | '/' | '/chat' | '/community' | '/games' | '/api/chat'
+  to: '/' | '/chat' | '/community' | '/games' | '/qr' | '/api/chat'
+  id: '__root__' | '/' | '/chat' | '/community' | '/games' | '/qr' | '/api/chat'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -76,6 +85,7 @@ export interface RootRouteChildren {
   ChatRoute: typeof ChatRoute
   CommunityRoute: typeof CommunityRoute
   GamesRoute: typeof GamesRoute
+  QrRoute: typeof QrRoute
   ApiChatRoute: typeof ApiChatRoute
 }
 
@@ -109,6 +119,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof GamesRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/qr': {
+      id: '/qr'
+      path: '/qr'
+      fullPath: '/qr'
+      preLoaderRoute: typeof QrRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/chat': {
       id: '/api/chat'
       path: '/api/chat'
@@ -124,6 +141,7 @@ const rootRouteChildren: RootRouteChildren = {
   ChatRoute: ChatRoute,
   CommunityRoute: CommunityRoute,
   GamesRoute: GamesRoute,
+  QrRoute: QrRoute,
   ApiChatRoute: ApiChatRoute,
 }
 export const routeTree = rootRouteImport
