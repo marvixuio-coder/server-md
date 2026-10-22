@@ -63,7 +63,7 @@ export function TicTacToe() {
           <button
             key={i}
             onClick={() => play(i)}
-            className="flex size-20 items-center justify-center rounded-xl border bg-secondary/60 font-display text-4xl font-bold transition hover:bg-secondary"
+            className="flex size-14 items-center justify-center rounded-xl border bg-secondary/60 font-display text-2xl font-bold transition hover:bg-secondary"
           >
             <span className={c === "X" ? "text-primary" : "text-muted-foreground"}>{c}</span>
           </button>
