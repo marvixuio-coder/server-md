@@ -105,6 +105,14 @@ function Index() {
             <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
               بطولات ومسابقات وجوائز كل أسبوع، ولا لحظة ملل
             </p>
+            <Link
+              to="/community"
+              aria-label="شات الفعالية"
+              className="mx-auto mt-4 flex size-28 flex-col items-center justify-center gap-1 rounded-3xl border-2 border-primary bg-primary/15 transition hover:scale-105"
+            >
+              <span className="text-4xl">💬</span>
+              <span className="text-xs font-semibold">شات الفعالية</span>
+            </Link>
           </div>
           <div className="rounded-2xl border bg-card p-5 text-center">
             <div className="text-3xl">🤝</div>
