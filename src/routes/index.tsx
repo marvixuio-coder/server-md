@@ -63,7 +63,7 @@ function Index() {
         <Link
           to="/qr"
           aria-label="اعرض رمز QR"
-          className="mt-8 flex size-20 flex-col items-center justify-center rounded-full border-2 border-primary bg-card shadow-[var(--shadow-glow)] transition hover:scale-105"
+          className="absolute top-4 left-4 z-10 flex size-16 flex-col items-center justify-center rounded-full border-2 border-primary bg-card shadow-[var(--shadow-glow)] transition hover:scale-105"
         >
           <span className="text-2xl">📱</span>
           <span className="text-xs font-semibold">QR</span>
