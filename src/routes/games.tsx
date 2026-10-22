@@ -25,15 +25,17 @@ function Games() {
           → رجوع
         </Link>
         <h1 className="font-display text-4xl font-bold">بدأ التحدي 🎮</h1>
-        <section className="w-full rounded-2xl border bg-card p-6 text-center">
+        <div className="grid w-full gap-4 sm:grid-cols-2">
+        <section className="aspect-square rounded-2xl border bg-card p-5 text-center">
           <h2 className="font-display text-2xl font-bold">X O</h2>
           <p className="mt-2 mb-5 text-sm text-muted-foreground">العب ضد الذكاء الاصطناعي</p>
           <TicTacToe />
         </section>
-        <section className="w-full rounded-2xl border bg-card p-6 text-center">
+        <section className="aspect-square overflow-y-auto rounded-2xl border bg-card p-5 text-center">
           <h2 className="mb-5 font-display text-2xl font-bold">ألغاز 🧩</h2>
           <Riddles />
         </section>
+        </div>
       </div>
     </main>
   );
