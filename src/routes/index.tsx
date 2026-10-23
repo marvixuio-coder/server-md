@@ -71,8 +71,11 @@ function Index() {
           <span className="text-xs font-semibold">QR</span>
         </Link>
 
-        <div className="absolute top-4 right-4 z-10 flex flex-col items-end gap-2">
+        <div className="absolute top-4 right-4 z-10">
           <AccountButton />
+        </div>
+
+        <div className="fixed right-4 bottom-4 z-10">
           <OwnerButton />
         </div>
 
