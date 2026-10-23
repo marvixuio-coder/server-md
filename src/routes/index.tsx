@@ -6,6 +6,7 @@ import {
   ServerTag,
   ServerText,
 } from "@/components/server-card";
+import { AccountButton } from "@/components/account-button";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -68,6 +69,10 @@ function Index() {
           <span className="text-2xl">📱</span>
           <span className="text-xs font-semibold">QR</span>
         </Link>
+
+        <div className="absolute top-4 right-4 z-10">
+          <AccountButton />
+        </div>
 
         <section className="mt-10 grid w-full gap-4 sm:grid-cols-3">
           <div className="rounded-2xl border bg-card p-5 text-center">
