@@ -5,4 +5,4 @@
 - [ ] Replace sample invite links with the owner's real Discord links (waiting on the links)
 - [x] Public community chat page (/community) with "اثبت نفسك ممكن تكسب في الفعالية" heading
 - [x] 250 riddles connected to the games page
-- [ ] Sign up / sign in with username + name + password, profile page, button in top-right corner
+- [x] Sign up / sign in with username + name + password, profile page, button in top-right corner

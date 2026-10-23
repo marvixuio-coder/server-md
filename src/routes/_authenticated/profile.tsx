@@ -89,7 +89,7 @@ function ProfilePage() {
                     value={name}
                     onChange={(e) => setName(e.target.value)}
                     maxLength={40}
-                    className="flex-1 rounded-xl border bg-background px-4 py-2.5 text-sm outline-none focus:border-primary"
+                    className="min-w-0 flex-1 rounded-xl border bg-background px-4 py-2.5 text-sm outline-none focus:border-primary"
                   />
                   <button
                     type="submit"
