@@ -7,6 +7,7 @@ import {
   ServerText,
 } from "@/components/server-card";
 import { AccountButton } from "@/components/account-button";
+import { OwnerButton } from "@/components/owner-button";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -70,8 +71,9 @@ function Index() {
           <span className="text-xs font-semibold">QR</span>
         </Link>
 
-        <div className="absolute top-4 right-4 z-10">
+        <div className="absolute top-4 right-4 z-10 flex flex-col items-end gap-2">
           <AccountButton />
+          <OwnerButton />
         </div>
 
         <section className="mt-10 grid w-full gap-4 sm:grid-cols-3">

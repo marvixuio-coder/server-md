@@ -15,6 +15,7 @@ import { Route as AuthRouteImport } from './routes/auth'
 import { Route as ChatRouteImport } from './routes/chat'
 import { Route as CommunityRouteImport } from './routes/community'
 import { Route as GamesRouteImport } from './routes/games'
+import { Route as OwnerRouteImport } from './routes/owner'
 import { Route as QrRouteImport } from './routes/qr'
 import { Route as AuthenticatedProfileRouteImport } from './routes/_authenticated/profile'
 import { Route as ApiChatRouteImport } from './routes/api/chat'
@@ -48,6 +49,11 @@ const GamesRoute = GamesRouteImport.update({
   path: '/games',
   getParentRoute: () => rootRouteImport,
 } as any)
+const OwnerRoute = OwnerRouteImport.update({
+  id: '/owner',
+  path: '/owner',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const QrRoute = QrRouteImport.update({
   id: '/qr',
   path: '/qr',
@@ -70,6 +76,7 @@ export interface FileRoutesByFullPath {
   '/chat': typeof ChatRoute
   '/community': typeof CommunityRoute
   '/games': typeof GamesRoute
+  '/owner': typeof OwnerRoute
   '/qr': typeof QrRoute
   '/profile': typeof AuthenticatedProfileRoute
   '/api/chat': typeof ApiChatRoute
@@ -80,6 +87,7 @@ export interface FileRoutesByTo {
   '/chat': typeof ChatRoute
   '/community': typeof CommunityRoute
   '/games': typeof GamesRoute
+  '/owner': typeof OwnerRoute
   '/qr': typeof QrRoute
   '/profile': typeof AuthenticatedProfileRoute
   '/api/chat': typeof ApiChatRoute
@@ -92,6 +100,7 @@ export interface FileRoutesById {
   '/chat': typeof ChatRoute
   '/community': typeof CommunityRoute
   '/games': typeof GamesRoute
+  '/owner': typeof OwnerRoute
   '/qr': typeof QrRoute
   '/_authenticated/profile': typeof AuthenticatedProfileRoute
   '/api/chat': typeof ApiChatRoute
@@ -104,6 +113,7 @@ export interface FileRouteTypes {
     | '/chat'
     | '/community'
     | '/games'
+    | '/owner'
     | '/qr'
     | '/profile'
     | '/api/chat'
@@ -114,6 +124,7 @@ export interface FileRouteTypes {
     | '/chat'
     | '/community'
     | '/games'
+    | '/owner'
     | '/qr'
     | '/profile'
     | '/api/chat'
@@ -125,6 +136,7 @@ export interface FileRouteTypes {
     | '/chat'
     | '/community'
     | '/games'
+    | '/owner'
     | '/qr'
     | '/_authenticated/profile'
     | '/api/chat'
@@ -137,6 +149,7 @@ export interface RootRouteChildren {
   ChatRoute: typeof ChatRoute
   CommunityRoute: typeof CommunityRoute
   GamesRoute: typeof GamesRoute
+  OwnerRoute: typeof OwnerRoute
   QrRoute: typeof QrRoute
   ApiChatRoute: typeof ApiChatRoute
 }
@@ -185,6 +198,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof GamesRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/owner': {
+      id: '/owner'
+      path: '/owner'
+      fullPath: '/owner'
+      preLoaderRoute: typeof OwnerRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/qr': {
       id: '/qr'
       path: '/qr'
@@ -227,6 +247,7 @@ const rootRouteChildren: RootRouteChildren = {
   ChatRoute: ChatRoute,
   CommunityRoute: CommunityRoute,
   GamesRoute: GamesRoute,
+  OwnerRoute: OwnerRoute,
   QrRoute: QrRoute,
   ApiChatRoute: ApiChatRoute,
 }

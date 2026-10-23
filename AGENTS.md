@@ -15,3 +15,4 @@
 - Public community chat lives in the Lovable Cloud `community_messages` table (anon read/insert, realtime) so every visitor sees the same persistent messages without signing in.
 - Accounts use username + password only: `src/lib/username.ts` maps each username to a fixed internal email (auto-confirm on), and a trigger fills `public.profiles` from signup metadata; email-based password reset is not possible by design.
 - Session state comes from one `AuthProvider` (`src/lib/auth-context.tsx`) in `__root.tsx`; it owns the only `onAuthStateChange` listener.
+- The owner panel (`/owner`) is a shared-password gate: password and cookie key live in server secrets, checked in `src/lib/owner.functions.ts`, and every panel read/delete re-checks the encrypted owner session server-side.
