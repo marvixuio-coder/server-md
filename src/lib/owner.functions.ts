@@ -22,7 +22,7 @@ async function isOwner() {
 }
 
 export const unlockOwner = createServerFn({ method: "POST" })
-  .inputValidator((data: { password: string }) => ({ password: String(data?.password ?? "").slice(0, 200) }))
+  .validator((data: { password: string }) => ({ password: String(data?.password ?? "").slice(0, 200) }))
   .handler(async ({ data }) => {
     const expected = process.env["OWNER_PASSWORD"];
     if (!expected) throw new Error("OWNER_PASSWORD is not set");
@@ -66,7 +66,7 @@ export const getOwnerDashboard = createServerFn({ method: "GET" }).handler(async
 });
 
 export const deleteCommunityMessage = createServerFn({ method: "POST" })
-  .inputValidator((data: { id: string }) => ({ id: String(data?.id ?? "") }))
+  .validator((data: { id: string }) => ({ id: String(data?.id ?? "") }))
   .handler(async ({ data }) => {
     if (!(await isOwner())) return { ok: false as const };
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
