@@ -25,7 +25,7 @@ export function useOwnerIds() {
 export function OwnerTag({ className = "" }: { className?: string }) {
   return (
     <span
-      className={`inline-flex shrink-0 items-center gap-0.5 rounded-full bg-accent px-2 py-0.5 align-middle text-[11px] leading-none font-bold text-accent-foreground ${className}`}
+      className={`inline-flex shrink-0 items-center gap-0.5 rounded-full bg-owner px-2 py-0.5 align-middle text-[11px] leading-none font-bold text-owner-foreground ${className}`}
     >
       👑 {OWNER_TAG_LABEL}
     </span>
