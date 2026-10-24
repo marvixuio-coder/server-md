@@ -16,6 +16,8 @@ import {
 const dashboardQuery = queryOptions({
   queryKey: ["owner-dashboard"],
   queryFn: () => getOwnerDashboard(),
+  // Backup for the live updates: also refresh every 10s while the panel is open.
+  refetchInterval: (q) => (q.state.data?.unlocked ? 10_000 : false),
 });
 
 export const Route = createFileRoute("/owner")({
