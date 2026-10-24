@@ -2,6 +2,7 @@ import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 
+import { OwnerTag, useOwnerIds } from "@/components/owner-tag";
 import { supabase } from "@/integrations/supabase/client";
 import { fetchProfile, profileQueryKey, useAuthUser } from "@/lib/auth-context";
 
@@ -21,6 +22,7 @@ export const Route = createFileRoute("/_authenticated/profile")({
 
 function ProfilePage() {
   const user = useAuthUser();
+  const owners = useOwnerIds();
   const queryClient = useQueryClient();
   const navigate = useNavigate();
   const { data: profile, isLoading } = useQuery({
@@ -77,7 +79,10 @@ function ProfilePage() {
               <div className="mx-auto flex size-24 items-center justify-center rounded-full border-4 border-primary bg-primary/15 font-display text-4xl font-bold">
                 {profile.display_name.charAt(0)}
               </div>
-              <h1 className="mt-4 font-display text-3xl font-bold">{profile.display_name}</h1>
+              <h1 className="mt-4 flex flex-wrap items-center justify-center gap-2 font-display text-3xl font-bold">
+                {profile.display_name}
+                {owners.has(profile.id) && <OwnerTag className="text-sm" />}
+              </h1>
               <p dir="ltr" className="mt-1 text-muted-foreground">@{profile.username}</p>
               <p className="mt-3 text-sm text-muted-foreground">عضو من {joined}</p>
 

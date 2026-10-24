@@ -1,10 +1,12 @@
 import { Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 
+import { OwnerTag, useOwnerIds } from "@/components/owner-tag";
 import { fetchProfile, profileQueryKey, useAuthUser } from "@/lib/auth-context";
 
 export function AccountButton() {
   const user = useAuthUser();
+  const owners = useOwnerIds();
   const { data: profile } = useQuery({
     queryKey: profileQueryKey(user?.id ?? "none"),
     queryFn: () => fetchProfile(user!.id),
@@ -38,6 +40,7 @@ export function AccountButton() {
         {name.charAt(0)}
       </span>
       <span className="max-w-28 truncate">{name}</span>
+      {owners.has(user.id) && <OwnerTag />}
     </Link>
   );
 }
