@@ -15,6 +15,13 @@
       "when": 1792763292823,
       "tag": "0001_create_profiles",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1792820478679,
+      "tag": "0002_owner_roles_and_bot_commands",
+      "breakpoints": true
     }
   ]
 }

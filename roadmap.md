@@ -7,4 +7,4 @@
 - [x] 250 riddles connected to the games page
 - [x] Sign up / sign in with username + name + password, profile page, button in top-right corner
 - [x] Owner control panel (/owner) behind a shared password, button under the account button
-- [x] Panel shows stats, live chat (who wrote what) and all accounts with last sign-in, with delete for messages and accounts, lists at the bottom
+- [x] Control panel replaced by a command bot (stats, chat post/delete, members, owners, custom commands)
