@@ -11,6 +11,7 @@ import {
   listSize,
   parseCommand,
 } from "./bot-parse";
+import { OWNER_TAG_LABEL } from "./owner-tag-label";
 
 type OwnerSession = { owner?: boolean };
 
@@ -80,6 +81,80 @@ export const checkOwnerAccess = createServerFn({ method: "POST" }).handler(async
   owner: await isOwner(),
 }));
 
+export const getOwnerDashboard = createServerFn({ method: "POST" }).handler(async () => {
+  if (!(await isOwner())) return { unlocked: false as const };
+  const { supabaseAdmin: db } = await import("@/integrations/supabase/client.server");
+  const [members, memberCount, messages, messageCount, authUsers] = await Promise.all([
+    db
+      .from("profiles")
+      .select("id,username,display_name,created_at")
+      .order("created_at", { ascending: false })
+      .limit(500),
+    db.from("profiles").select("id", { count: "exact", head: true }),
+    db
+      .from("community_messages")
+      .select("id,user_id,name,content,created_at")
+      .order("created_at", { ascending: false })
+      .limit(300),
+    db.from("community_messages").select("id", { count: "exact", head: true }),
+    db.auth.admin.listUsers({ page: 1, perPage: 1000 }),
+  ]);
+  if (members.error || messages.error || authUsers.error)
+    console.error(members.error ?? messages.error ?? authUsers.error);
+
+  const lastSignIn = new Map<string, string | null>();
+  for (const u of authUsers.data?.users ?? []) lastSignIn.set(u.id, u.last_sign_in_at ?? null);
+
+  const dayAgo = Date.now() - 24 * 60 * 60 * 1000;
+  const memberRows = (members.data ?? []).map((m) => ({
+    ...m,
+    last_sign_in_at: lastSignIn.get(m.id) ?? null,
+  }));
+  return {
+    unlocked: true as const,
+    memberCount: memberCount.count ?? 0,
+    messageCount: messageCount.count ?? 0,
+    activeToday: memberRows.filter(
+      (m) => m.last_sign_in_at && new Date(m.last_sign_in_at).getTime() > dayAgo,
+    ).length,
+    messagesToday: (messages.data ?? []).filter((m) => new Date(m.created_at).getTime() > dayAgo)
+      .length,
+    members: memberRows,
+    messages: messages.data ?? [],
+  };
+});
+
+const uuidLike = (id: string) => /^[0-9a-f-]{36}$/i.test(id);
+
+export const deleteCommunityMessage = createServerFn({ method: "POST" })
+  .validator((data: { id: string }) => ({ id: String(data?.id ?? "") }))
+  .handler(async ({ data }) => {
+    if (!(await isOwner()) || !uuidLike(data.id)) return { ok: false as const };
+    const { supabaseAdmin: db } = await import("@/integrations/supabase/client.server");
+    const { error } = await db.from("community_messages").delete().eq("id", data.id);
+    if (error) console.error(error);
+    return { ok: !error };
+  });
+
+export const deleteAllCommunityMessages = createServerFn({ method: "POST" }).handler(async () => {
+  if (!(await isOwner())) return { ok: false as const };
+  const { supabaseAdmin: db } = await import("@/integrations/supabase/client.server");
+  const { error } = await db.from("community_messages").delete().gte("created_at", "1970-01-01");
+  if (error) console.error(error);
+  return { ok: !error };
+});
+
+export const deleteMember = createServerFn({ method: "POST" })
+  .validator((data: { id: string }) => ({ id: String(data?.id ?? "") }))
+  .handler(async ({ data }) => {
+    if (!(await isOwner()) || !uuidLike(data.id)) return { ok: false as const };
+    const { supabaseAdmin: db } = await import("@/integrations/supabase/client.server");
+    // Profile and role rows go with the account (ON DELETE CASCADE).
+    const { error } = await db.auth.admin.deleteUser(data.id);
+    if (error) console.error(error);
+    return { ok: !error };
+  });
+
 const fmt = (d: string | null | undefined) =>
   d
     ? new Date(d).toLocaleString("ar", {
@@ -101,6 +176,12 @@ export const runBotCommand = createServerFn({ method: "POST" })
     if (!cmd) return { locked: false, reply: "اكتب أمر، مثلًا /help" };
     const { supabaseAdmin: db } = await import("@/integrations/supabase/client.server");
     const say = (reply: string) => ({ locked: false as const, reply });
+    const ownerSet = async () => {
+      const { data: r } = await db.from("user_roles").select("user_id").eq("role", "owner");
+      return new Set((r ?? []).map((x) => x.user_id));
+    };
+    const tag = (owners: Set<string>, id: string | null | undefined) =>
+      id && owners.has(id) ? ` [👑 ${OWNER_TAG_LABEL}]` : "";
 
     const findProfile = async (raw: string | undefined) => {
       const username = (raw ?? "").replace(/^@/, "").trim().toLowerCase();
@@ -140,14 +221,19 @@ export const runBotCommand = createServerFn({ method: "POST" })
 
       case "messages": {
         const n = listSize(cmd.args[0]);
-        const { data: rows } = await db
-          .from("community_messages")
-          .select("id,name,content,created_at")
-          .order("created_at", { ascending: false })
-          .limit(n);
+        const [{ data: rows }, owners] = await Promise.all([
+          db
+            .from("community_messages")
+            .select("id,user_id,name,content,created_at")
+            .order("created_at", { ascending: false })
+            .limit(n),
+          ownerSet(),
+        ]);
         if (!rows?.length) return say("ما فيه رسائل في الشات.");
         return say(
-          rows.map((m) => `#${shortId(m.id)} · ${m.name}: ${m.content}  (${fmt(m.created_at)})`).join("\n") +
+          rows
+            .map((m) => `#${shortId(m.id)} · ${m.name}${tag(owners, m.user_id)}: ${m.content}  (${fmt(m.created_at)})`)
+            .join("\n") +
             "\n\nللمسح: /delmsg الرمز",
         );
       }
@@ -184,19 +270,20 @@ export const runBotCommand = createServerFn({ method: "POST" })
 
       case "members": {
         const n = listSize(cmd.args[0]);
-        const [{ data: rows }, users] = await Promise.all([
+        const [{ data: rows }, users, owners] = await Promise.all([
           db
             .from("profiles")
             .select("id,username,display_name,created_at")
             .order("created_at", { ascending: false })
             .limit(n),
           db.auth.admin.listUsers({ page: 1, perPage: 1000 }),
+          ownerSet(),
         ]);
         if (!rows?.length) return say("ما فيه حسابات.");
         const last = new Map((users.data?.users ?? []).map((u) => [u.id, u.last_sign_in_at]));
         return say(
           rows
-            .map((m) => `@${m.username} · ${m.display_name} — سجّل ${fmt(m.created_at)} · آخر دخول ${fmt(last.get(m.id))}`)
+            .map((m) => `@${m.username} · ${m.display_name}${tag(owners, m.id)} — سجّل ${fmt(m.created_at)} · آخر دخول ${fmt(last.get(m.id))}`)
             .join("\n"),
         );
       }
@@ -213,7 +300,7 @@ export const runBotCommand = createServerFn({ method: "POST" })
         const ids = (roles ?? []).map((r) => r.user_id);
         if (!ids.length) return say("ما فيه أونرز بحسابات لسا. الدخول بكلمة السر بس.\nأضف واحد: /addowner يوزر");
         const { data: ps } = await db.from("profiles").select("username,display_name").in("id", ids);
-        return say("👑 الأونرز:\n" + (ps ?? []).map((p) => `@${p.username} · ${p.display_name}`).join("\n"));
+        return say("👑 الأونرز:\n" + (ps ?? []).map((p) => `@${p.username} · ${p.display_name} [👑 ${OWNER_TAG_LABEL}]`).join("\n"));
       }
 
       case "addowner": {
@@ -222,14 +309,14 @@ export const runBotCommand = createServerFn({ method: "POST" })
         const { error } = await db
           .from("user_roles")
           .upsert({ user_id: p.id, role: "owner" }, { onConflict: "user_id,role", ignoreDuplicates: true });
-        return say(error ? "ما قدرت أضيفه." : `👑 صار @${p.username} أونر. لما يسجّل دخول يقدر يفتح اللوحة بدون كلمة سر.`);
+        return say(error ? "ما قدرت أضيفه." : `👑 صار @${p.username} أونر، وتاج "${OWNER_TAG_LABEL}" صار جنب اسمه في كل مكان. لما يسجّل دخول يقدر يفتح اللوحة بدون كلمة سر.`);
       }
 
       case "removeowner": {
         const p = await findProfile(cmd.args[0]);
         if (!p) return say("ما لقيت حساب بهاليوزر.");
         const { error } = await db.from("user_roles").delete().eq("user_id", p.id).eq("role", "owner");
-        return say(error ? "ما قدرت أشيله." : `تم، @${p.username} ما عاد أونر.`);
+        return say(error ? "ما قدرت أشيله." : `تم، @${p.username} ما عاد أونر وانشال تاج "${OWNER_TAG_LABEL}" من اسمه.`);
       }
 
       case "cmds": {
