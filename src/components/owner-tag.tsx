@@ -1,9 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 
 import { supabase } from "@/integrations/supabase/client";
-
-/** Word shown in the tag next to every owner's name. */
-export const OWNER_TAG_LABEL = "كارف";
+import { OWNER_TAG_LABEL } from "@/lib/owner-tag-label";
 
 export const ownerIdsQueryKey = ["owner-ids"] as const;
 
