@@ -38,18 +38,21 @@ export type Database = {
           created_at: string
           id: string
           name: string
+          user_id: string | null
         }
         Insert: {
           content: string
           created_at?: string
           id?: string
           name: string
+          user_id?: string | null
         }
         Update: {
           content?: string
           created_at?: string
           id?: string
           name?: string
+          user_id?: string | null
         }
         Relationships: []
       }
@@ -107,6 +110,7 @@ export type Database = {
         }
         Returns: boolean
       }
+      owner_ids: { Args: never; Returns: string[] }
     }
     Enums: {
       app_role: "owner"

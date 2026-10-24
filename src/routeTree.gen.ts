@@ -19,6 +19,7 @@ import { Route as OwnerRouteImport } from './routes/owner'
 import { Route as QrRouteImport } from './routes/qr'
 import { Route as AuthenticatedProfileRouteImport } from './routes/_authenticated/profile'
 import { Route as ApiChatRouteImport } from './routes/api/chat'
+import { Route as OwnerBotRouteImport } from './routes/owner_.bot'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -69,6 +70,11 @@ const ApiChatRoute = ApiChatRouteImport.update({
   path: '/api/chat',
   getParentRoute: () => rootRouteImport,
 } as any)
+const OwnerBotRoute = OwnerBotRouteImport.update({
+  id: '/owner_/bot',
+  path: '/owner/bot',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -80,6 +86,7 @@ export interface FileRoutesByFullPath {
   '/qr': typeof QrRoute
   '/profile': typeof AuthenticatedProfileRoute
   '/api/chat': typeof ApiChatRoute
+  '/owner/bot': typeof OwnerBotRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -91,6 +98,7 @@ export interface FileRoutesByTo {
   '/qr': typeof QrRoute
   '/profile': typeof AuthenticatedProfileRoute
   '/api/chat': typeof ApiChatRoute
+  '/owner/bot': typeof OwnerBotRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -104,6 +112,7 @@ export interface FileRoutesById {
   '/qr': typeof QrRoute
   '/_authenticated/profile': typeof AuthenticatedProfileRoute
   '/api/chat': typeof ApiChatRoute
+  '/owner_/bot': typeof OwnerBotRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -117,6 +126,7 @@ export interface FileRouteTypes {
     | '/qr'
     | '/profile'
     | '/api/chat'
+    | '/owner/bot'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -128,6 +138,7 @@ export interface FileRouteTypes {
     | '/qr'
     | '/profile'
     | '/api/chat'
+    | '/owner/bot'
   id:
     | '__root__'
     | '/'
@@ -140,6 +151,7 @@ export interface FileRouteTypes {
     | '/qr'
     | '/_authenticated/profile'
     | '/api/chat'
+    | '/owner_/bot'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -152,6 +164,7 @@ export interface RootRouteChildren {
   OwnerRoute: typeof OwnerRoute
   QrRoute: typeof QrRoute
   ApiChatRoute: typeof ApiChatRoute
+  OwnerBotRoute: typeof OwnerBotRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -226,6 +239,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiChatRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/owner_/bot': {
+      id: '/owner_/bot'
+      path: '/owner/bot'
+      fullPath: '/owner/bot'
+      preLoaderRoute: typeof OwnerBotRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -250,6 +270,7 @@ const rootRouteChildren: RootRouteChildren = {
   OwnerRoute: OwnerRoute,
   QrRoute: QrRoute,
   ApiChatRoute: ApiChatRoute,
+  OwnerBotRoute: OwnerBotRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

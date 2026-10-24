@@ -1,6 +1,10 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
+
+import { OwnerTag, useOwnerIds } from "@/components/owner-tag";
 import { supabase } from "@/integrations/supabase/client";
+import { fetchProfile, profileQueryKey, useAuthUser } from "@/lib/auth-context";
 
 export const Route = createFileRoute("/community")({
   head: () => ({
@@ -16,24 +20,29 @@ export const Route = createFileRoute("/community")({
   component: CommunityPage,
 });
 
-type Msg = { id: string; name: string; content: string; created_at: string };
-const NAME_KEY = "md-community-name";
+type Msg = { id: string; user_id: string | null; name: string; content: string; created_at: string };
+const COLS = "id,user_id,name,content,created_at";
 
 function CommunityPage() {
   const [messages, setMessages] = useState<Msg[]>([]);
   const [loading, setLoading] = useState(true);
-  const [name, setName] = useState("");
+  const user = useAuthUser();
+  const owners = useOwnerIds();
+  const { data: profile } = useQuery({
+    queryKey: profileQueryKey(user?.id ?? "none"),
+    queryFn: () => fetchProfile(user!.id),
+    enabled: !!user,
+  });
   const [text, setText] = useState("");
   const [sending, setSending] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const endRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    setName(localStorage.getItem(NAME_KEY) ?? "");
     let active = true;
     supabase
       .from("community_messages")
-      .select("id,name,content,created_at")
+      .select(COLS)
       .order("created_at", { ascending: false })
       .limit(200)
       .then(({ data, error }) => {
@@ -44,11 +53,17 @@ function CommunityPage() {
       });
 
     const channel = supabase
-      .channel("community_messages")
+      .channel(`community-${Math.random().toString(36).slice(2)}`)
       .on(
         "postgres_changes",
-        { event: "INSERT", schema: "public", table: "community_messages" },
+        { event: "*", schema: "public", table: "community_messages" },
         (payload) => {
+          if (payload.eventType === "DELETE") {
+            const gone = (payload.old as Partial<Msg>).id;
+            setMessages((prev) => prev.filter((x) => x.id !== gone));
+            return;
+          }
+          if (payload.eventType !== "INSERT") return;
           const m = payload.new as Msg;
           setMessages((prev) => (prev.some((x) => x.id === m.id) ? prev : [...prev, m]));
         },
@@ -65,25 +80,21 @@ function CommunityPage() {
   }, [messages]);
 
   const send = async () => {
-    const n = name.trim();
     const c = text.trim();
-    if (!n) return setError("اكتب اسمك أول");
-    if (!c || sending) return;
+    if (!user || !c || sending) return;
     setSending(true);
     setError(null);
-    localStorage.setItem(NAME_KEY, n);
+    // Name and account are filled in by the database from the signed-in account.
     const { data, error } = await supabase
       .from("community_messages")
-      .insert({ name: n.slice(0, 30), content: c.slice(0, 500) })
-      .select("id,name,content,created_at")
+      .insert({ name: profile?.display_name.slice(0, 30) || "عضو", content: c.slice(0, 500), user_id: user.id })
+      .select(COLS)
       .single();
     setSending(false);
     if (error) return setError("ما انرسلت الرسالة، جرّب مرة ثانية");
     setText("");
     if (data) setMessages((prev) => (prev.some((x) => x.id === data.id) ? prev : [...prev, data]));
   };
-
-  const myName = name.trim();
 
   return (
     <main className="min-h-screen bg-glow px-4 py-8">
@@ -105,11 +116,14 @@ function CommunityPage() {
               <p className="mt-10 text-center text-muted-foreground">ما فيه رسائل لسا، كن أول واحد يكتب!</p>
             )}
             {messages.map((m) => {
-              const mine = myName && m.name === myName;
+              const mine = !!user && m.user_id === user.id;
               return (
                 <div key={m.id} className={mine ? "flex justify-start" : "flex justify-end"}>
                   <div className={mine ? "max-w-[80%] rounded-2xl bg-primary px-4 py-2 text-primary-foreground" : "max-w-[80%] rounded-2xl bg-secondary px-4 py-2"}>
-                    <div className="text-xs font-semibold opacity-80">{m.name}</div>
+                    <div className="flex flex-wrap items-center gap-1.5 text-xs font-semibold">
+                      <span className="opacity-80">{m.name}</span>
+                      {m.user_id && owners.has(m.user_id) && <OwnerTag />}
+                    </div>
                     <div className="whitespace-pre-wrap break-words">{m.content}</div>
                     <div className="mt-1 text-[10px] opacity-60">
                       {new Date(m.created_at).toLocaleString("ar", { hour: "2-digit", minute: "2-digit", day: "numeric", month: "short" })}
@@ -123,40 +137,50 @@ function CommunityPage() {
 
           {error && <div className="px-3 pb-2 text-center text-sm text-destructive">{error}</div>}
 
-          <div className="space-y-2 border-t p-3">
-            <input
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              maxLength={30}
-              placeholder="اسمك"
-              aria-label="اسمك"
-              className="w-full rounded-xl border bg-background px-3 py-2 outline-none focus:ring-2 focus:ring-ring"
-            />
-            <div className="flex items-end gap-2">
-              <textarea
-                rows={1}
-                value={text}
-                maxLength={500}
-                onChange={(e) => setText(e.target.value)}
-                onKeyDown={(e) => {
-                  if (e.key === "Enter" && !e.shiftKey) {
-                    e.preventDefault();
-                    void send();
-                  }
-                }}
-                placeholder="اكتب رسالتك للكل..."
-                aria-label="رسالتك"
-                className="flex-1 resize-none rounded-xl border bg-background px-3 py-2 outline-none focus:ring-2 focus:ring-ring"
-              />
-              <button
-                onClick={() => void send()}
-                disabled={!text.trim() || sending}
-                className="rounded-xl bg-primary px-4 py-2 text-primary-foreground disabled:opacity-50"
+          {user === undefined ? (
+            <div className="border-t p-3 text-center text-sm text-muted-foreground">لحظة...</div>
+          ) : !user ? (
+            <div className="flex flex-col items-center gap-2 border-t p-4 text-center">
+              <p className="text-sm text-muted-foreground">لازم تسجّل دخول بحسابك عشان تكتب في الشات</p>
+              <Link
+                to="/auth"
+                className="rounded-full bg-primary px-6 py-2 text-sm font-semibold text-primary-foreground transition hover:bg-primary/90"
               >
-                {sending ? "..." : "إرسال"}
-              </button>
+                دخول / حساب جديد
+              </Link>
             </div>
-          </div>
+          ) : (
+            <div className="space-y-2 border-t p-3">
+              <p className="flex items-center gap-1.5 text-xs text-muted-foreground">
+                تكتب باسم <span className="font-semibold text-foreground">{profile?.display_name ?? "..."}</span>
+                {owners.has(user.id) && <OwnerTag />}
+              </p>
+              <div className="flex items-end gap-2">
+                <textarea
+                  rows={1}
+                  value={text}
+                  maxLength={500}
+                  onChange={(e) => setText(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" && !e.shiftKey) {
+                      e.preventDefault();
+                      void send();
+                    }
+                  }}
+                  placeholder="اكتب رسالتك للكل..."
+                  aria-label="رسالتك"
+                  className="flex-1 resize-none rounded-xl border bg-background px-3 py-2 outline-none focus:ring-2 focus:ring-ring"
+                />
+                <button
+                  onClick={() => void send()}
+                  disabled={!text.trim() || sending}
+                  className="rounded-xl bg-primary px-4 py-2 text-primary-foreground disabled:opacity-50"
+                >
+                  {sending ? "..." : "إرسال"}
+                </button>
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </main>
