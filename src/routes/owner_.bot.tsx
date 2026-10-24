@@ -103,6 +103,7 @@ function BotPage() {
             onClick={async () => {
               await lock();
               queryClient.removeQueries({ queryKey: accessQuery.queryKey });
+              queryClient.removeQueries({ queryKey: ["owner-dashboard"] });
               void navigate({ to: "/", replace: true });
             }}
             className="rounded-full border border-destructive/60 px-4 py-1.5 text-sm font-semibold text-destructive hover:bg-destructive/10"
