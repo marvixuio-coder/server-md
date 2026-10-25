@@ -100,7 +100,7 @@ export const getOwnerDashboard = createServerFn({ method: "POST" }).handler(asyn
     db.auth.admin.listUsers({ page: 1, perPage: 1000 }),
     db
       .from("shop_requests")
-      .select("id,user_id,kind,price,status,created_at")
+      .select("id,user_id,kind,price,status,created_at,proof")
       .order("created_at", { ascending: false })
       .limit(300),
   ]);
