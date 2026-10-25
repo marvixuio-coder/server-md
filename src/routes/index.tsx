@@ -63,6 +63,36 @@ function Index() {
           </ServerCard>
         </ul>
 
+        {/* خانة المتجر: نفس شكل خانة الديسكورد */}
+        <section className="server-card animate-rise relative mt-4 flex w-full flex-col rounded-2xl border p-5">
+          <span className="absolute end-5 top-5 rounded-full bg-secondary px-3 py-1 text-xs font-medium text-muted-foreground">
+            <MyPoints />
+          </span>
+          <div className="flex size-14 items-center justify-center rounded-2xl bg-primary text-3xl">🛒</div>
+          <h2 dir="ltr" className="mt-4 text-start font-display text-2xl font-semibold tracking-wide">SHOP</h2>
+          <p className="mt-1.5 text-sm leading-relaxed text-muted-foreground">
+            كل فوز في X O يعطيك 50 سكور و 5 نقاط، جمّع نقاطك واشترِ
+          </p>
+          <div className="mt-5 grid gap-4 sm:grid-cols-2">
+            <div className="flex flex-col rounded-2xl border-2 border-primary bg-card p-5 text-center">
+              <div className="text-4xl">👑</div>
+              <h3 className="mt-3 font-display text-2xl font-bold">VIP</h3>
+              <p className="mt-2 text-sm text-muted-foreground">رتبة VIP في السيرفر ومميزات ما يحصّلها غيرك</p>
+              <p className="mt-3 font-display text-3xl font-bold text-primary">700 نقطة</p>
+              <ShopButton kind="vip_buy">شراء VIP</ShopButton>
+            </div>
+            <div className="flex flex-col rounded-2xl border-2 border-primary bg-card p-5 text-center">
+              <div className="text-4xl">🔥</div>
+              <h3 className="mt-3 font-display text-2xl font-bold">OG</h3>
+              <p className="mt-2 text-sm text-muted-foreground">رتبة OG للي معنا من البداية</p>
+              <p className="mt-3 font-display text-3xl font-bold text-primary">طلب</p>
+              <ShopButton kind="og_claim" proofLabel="الإثبات: بقالك قد إيه في السيرفر؟">
+                ارسل طلب OG
+              </ShopButton>
+            </div>
+          </div>
+        </section>
+
         <Link
           to="/qr"
           aria-label="اعرض رمز QR"
@@ -136,38 +166,6 @@ function Index() {
               <span className="text-4xl">🤖</span>
               <span className="text-xs font-semibold">كلّم الروبوت</span>
             </Link>
-          </div>
-        </section>
-
-        <section className="mt-12 w-full">
-          <div className="flex flex-wrap items-end justify-between gap-2">
-            <h2 className="font-display text-3xl font-bold">الشوب 🛒</h2>
-            <p className="text-sm text-muted-foreground">
-              <MyPoints />
-            </p>
-          </div>
-          <p className="mt-1 text-sm text-muted-foreground">كل فوز في X O يعطيك 50 سكور و 5 نقاط</p>
-          <div className="mt-5 grid gap-4 sm:grid-cols-2">
-            <div className="rounded-2xl border-2 border-primary bg-card p-5 text-center shadow-[var(--shadow-glow)]">
-              <div className="text-4xl">👑</div>
-              <h3 className="mt-3 font-display text-2xl font-bold">VIP</h3>
-              <p className="mt-2 text-sm text-muted-foreground">رتبة VIP في السيرفر ومميزات ما يحصّلها غيرك</p>
-              <p className="mt-3 font-display text-3xl font-bold text-primary">700 نقطة</p>
-              <ShopButton kind="vip_buy">شراء VIP</ShopButton>
-            </div>
-            <div className="flex flex-col gap-4">
-              <div className="rounded-2xl border bg-card p-5 text-center">
-                <div className="text-4xl">🔥</div>
-                <h3 className="mt-3 font-display text-2xl font-bold">OG</h3>
-                <p className="mt-2 text-sm text-muted-foreground">رتبة OG للي معنا من البداية</p>
-                <ShopButton kind="og_buy">شراء OG</ShopButton>
-              </div>
-              <div className="rounded-2xl border bg-card p-5 text-center">
-                <h3 className="font-display text-xl font-semibold">مطالبة 🙋</h3>
-                <p className="mt-2 text-sm text-muted-foreground">تستاهل OG؟ طالب فيها والأونر يراجع طلبك</p>
-                <ShopButton kind="og_claim" variant="outline">مطالبة OG</ShopButton>
-              </div>
-            </div>
           </div>
         </section>
 
