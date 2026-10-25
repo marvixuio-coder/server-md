@@ -14,4 +14,4 @@
 - [x] X O harder (AI best move 80%), scored games: each win = 50 score + 5 points, shown on profile
 - [x] Shop on home page: VIP 700 points, OG buy, OG claim; requests box in the control panel under the bot card
 - [x] AI chat: never shares site code, says it was made by matrosh
-- [ ] OG price in points (waiting on the owner; OG is a free request for now)
+- [x] SHOP box under the Discord card: VIP (700 points) and OG request with proof of time in server, same size

@@ -69,7 +69,7 @@ function Index() {
             <MyPoints />
           </span>
           <div className="flex size-14 items-center justify-center rounded-2xl bg-primary text-3xl">🛒</div>
-          <h2 dir="ltr" className="mt-4 text-start font-display text-2xl font-semibold tracking-wide">SHOP</h2>
+          <h2 className="mt-4 font-display text-2xl font-semibold tracking-wide">SHOP</h2>
           <p className="mt-1.5 text-sm leading-relaxed text-muted-foreground">
             كل فوز في X O يعطيك 50 سكور و 5 نقاط، جمّع نقاطك واشترِ
           </p>
