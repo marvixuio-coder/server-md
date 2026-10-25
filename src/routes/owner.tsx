@@ -7,11 +7,13 @@ import { OwnerPasswordBox } from "@/components/owner-gate";
 import { OwnerTag, useOwnerIds } from "@/components/owner-tag";
 import { supabase } from "@/integrations/supabase/client";
 import {
+  completeShopRequest,
   deleteAllCommunityMessages,
   deleteCommunityMessage,
   deleteMember,
   getOwnerDashboard,
   lockOwner,
+  rejectShopRequest,
 } from "@/lib/owner.functions";
 
 const dashboardQuery = queryOptions({
@@ -42,6 +44,12 @@ export const Route = createFileRoute("/owner")({
 const fmt = (d: string) =>
   new Date(d).toLocaleString("ar", { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" });
 
+const REQUEST_LABELS: Record<string, string> = {
+  vip_buy: "شراء VIP",
+  og_buy: "شراء OG",
+  og_claim: "مطالبة OG",
+};
+
 function OwnerPage() {
   const { data } = useSuspenseQuery(dashboardQuery);
   const queryClient = useQueryClient();
@@ -51,6 +59,8 @@ function OwnerPage() {
   const delMsg = useServerFn(deleteCommunityMessage);
   const delAll = useServerFn(deleteAllCommunityMessages);
   const delMember = useServerFn(deleteMember);
+  const completeReq = useServerFn(completeShopRequest);
+  const rejectReq = useServerFn(rejectShopRequest);
   const refresh = () => queryClient.invalidateQueries({ queryKey: dashboardQuery.queryKey });
   const unlocked = data.unlocked;
 
@@ -141,6 +151,63 @@ function OwnerPage() {
           </div>
           <span className="text-2xl text-muted-foreground">←</span>
         </Link>
+
+        <section className="mt-6 rounded-2xl border bg-card p-5">
+          <h2 className="font-display text-xl font-semibold">
+            🛒 الطلبات <span className="text-sm font-normal text-muted-foreground">— مين طلب من الشوب وبأي حساب</span>
+          </h2>
+          {data.requests.length === 0 ? (
+            <p className="mt-4 text-sm text-muted-foreground">ما فيه طلبات لسا</p>
+          ) : (
+            <ul className="mt-4 max-h-[28rem] divide-y overflow-y-auto pe-1">
+              {data.requests.map((r) => (
+                <li key={r.id} className="flex flex-wrap items-center justify-between gap-3 py-2.5 text-sm">
+                  <div className="min-w-0">
+                    <p className="flex flex-wrap items-center gap-1.5 font-semibold">
+                      <span className="rounded-full bg-primary/15 px-2 py-0.5 text-xs text-primary">
+                        {REQUEST_LABELS[r.kind] ?? r.kind}
+                      </span>
+                      {r.display_name}
+                      {owners.has(r.user_id) && <OwnerTag />}
+                      {r.username && (
+                        <span dir="ltr" className="font-normal text-muted-foreground">@{r.username}</span>
+                      )}
+                    </p>
+                    <p className="text-xs text-muted-foreground">
+                      {fmt(r.created_at)}
+                      {r.price > 0 && ` · دفع ${r.price} نقطة`} · نقاطه الحين: {r.points}
+                      {r.status === "done" && " · ✅ تم"}
+                    </p>
+                  </div>
+                  <div className="flex shrink-0 gap-2">
+                    {r.status === "pending" && (
+                      <button
+                        onClick={async () => {
+                          await completeReq({ data: { id: r.id } });
+                          void refresh();
+                        }}
+                        className="rounded-full border border-online/60 px-3 py-1 text-xs font-semibold text-online hover:bg-online/10"
+                      >
+                        تم
+                      </button>
+                    )}
+                    <button
+                      onClick={async () => {
+                        const refund = r.status === "pending" && r.price > 0;
+                        if (!confirm(refund ? `ترفض الطلب؟ ترجع له ${r.price} نقطة.` : "تمسح الطلب؟")) return;
+                        await rejectReq({ data: { id: r.id } });
+                        void refresh();
+                      }}
+                      className="rounded-full border px-3 py-1 text-xs text-destructive hover:bg-destructive/10"
+                    >
+                      {r.status === "pending" ? "رفض" : "مسح"}
+                    </button>
+                  </div>
+                </li>
+              ))}
+            </ul>
+          )}
+        </section>
 
         <div className="mt-12 space-y-6">
           <section className="rounded-2xl border bg-card p-5">

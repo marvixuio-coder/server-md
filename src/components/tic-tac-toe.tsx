@@ -1,60 +1,74 @@
 import { useState } from "react";
+import { Link } from "@tanstack/react-router";
+import { useQueryClient } from "@tanstack/react-query";
+import { useServerFn } from "@tanstack/react-start";
 
-type Cell = "X" | "O" | null;
-const LINES: [number, number, number][] = [
-  [0, 1, 2], [3, 4, 5], [6, 7, 8],
-  [0, 3, 6], [1, 4, 7], [2, 5, 8],
-  [0, 4, 8], [2, 4, 6],
-];
+import { useAuthUser } from "@/lib/auth-context";
+import { aiMove, fromBoardString, winner, WIN_POINTS, WIN_SCORE, type Cell } from "@/lib/ttt";
+import { playTttMove, startTttGame } from "@/lib/ttt.functions";
 
-function winner(b: Cell[]): Cell | "draw" | null {
-  for (const [a, c, d] of LINES) if (b[a] && b[a] === b[c] && b[a] === b[d]) return b[a];
-  return b.every(Boolean) ? "draw" : null;
-}
-
-function minimax(b: Cell[], ai: boolean): number {
-  const w = winner(b);
-  if (w === "O") return 1;
-  if (w === "X") return -1;
-  if (w === "draw") return 0;
-  let best = ai ? -2 : 2;
-  b.forEach((v, i) => {
-    if (v) return;
-    b[i] = ai ? "O" : "X";
-    const s = minimax(b, !ai);
-    b[i] = null;
-    best = ai ? Math.max(best, s) : Math.min(best, s);
-  });
-  return best;
-}
-
-function aiMove(b: Cell[]): number {
-  const free = b.map((v, i) => (v ? -1 : i)).filter((i) => i >= 0);
-  if (Math.random() < 0.45) return free[Math.floor(Math.random() * free.length)] ?? 0;
-  let best = -2, move = free[0] ?? 0;
-  for (const i of free) {
-    b[i] = "O";
-    const s = minimax(b, false);
-    b[i] = null;
-    if (s > best) { best = s; move = i; }
-  }
-  return move;
-}
+const EMPTY: Cell[] = Array(9).fill(null);
 
 export function TicTacToe() {
-  const [board, setBoard] = useState<Cell[]>(Array(9).fill(null));
-  const result = winner(board);
+  const user = useAuthUser();
+  const queryClient = useQueryClient();
+  const start = useServerFn(startTttGame);
+  const move = useServerFn(playTttMove);
 
-  const play = (i: number) => {
-    if (board[i] || result) return;
-    const next = [...board];
-    next[i] = "X";
-    if (!winner(next)) next[aiMove(next)] = "O";
-    setBoard(next);
+  const [board, setBoard] = useState<Cell[]>(EMPTY);
+  const [gameId, setGameId] = useState<string | null>(null);
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState(false);
+  const result = winner(board);
+  const scored = !!user;
+
+  const play = async (i: number) => {
+    if (board[i] || result || busy) return;
+    if (!scored) {
+      const next = [...board];
+      next[i] = "X";
+      if (!winner(next)) next[aiMove(next)] = "O";
+      setBoard(next);
+      return;
+    }
+    setBusy(true);
+    setError(false);
+    const optimistic = [...board];
+    optimistic[i] = "X";
+    setBoard(optimistic);
+    try {
+      const id = gameId ?? (await start()).id;
+      setGameId(id);
+      const res = await move({ data: { id, cell: i } });
+      if (!res.ok) throw new Error("move rejected");
+      setBoard(fromBoardString(res.board));
+      if (res.status === "won") void queryClient.invalidateQueries({ queryKey: ["profile"] });
+    } catch {
+      setBoard(board);
+      setError(true);
+    } finally {
+      setBusy(false);
+    }
+  };
+
+  const reset = () => {
+    setBoard(EMPTY);
+    setGameId(null);
+    setError(false);
   };
 
   const status =
-    result === "X" ? "فزت! 🔥" : result === "O" ? "الذكاء الاصطناعي فاز 🤖" : result === "draw" ? "تعادل 🤝" : "دورك — أنت X";
+    result === "X"
+      ? scored
+        ? `فزت! 🔥 +${WIN_SCORE} سكور و +${WIN_POINTS} نقاط`
+        : "فزت! 🔥"
+      : result === "O"
+        ? "الذكاء الاصطناعي فاز 🤖"
+        : result === "draw"
+          ? "تعادل 🤝"
+          : busy
+            ? "الذكاء الاصطناعي يفكّر..."
+            : "دورك — أنت X";
 
   return (
     <div className="flex flex-col items-center gap-4">
@@ -62,7 +76,8 @@ export function TicTacToe() {
         {board.map((c, i) => (
           <button
             key={i}
-            onClick={() => play(i)}
+            onClick={() => void play(i)}
+            disabled={busy}
             className="flex size-14 items-center justify-center rounded-xl border bg-secondary/60 font-display text-2xl font-bold transition hover:bg-secondary"
           >
             <span className={c === "X" ? "text-primary" : "text-muted-foreground"}>{c}</span>
@@ -70,10 +85,13 @@ export function TicTacToe() {
         ))}
       </div>
       <p className="text-sm text-muted-foreground">{status}</p>
-      <button
-        onClick={() => setBoard(Array(9).fill(null))}
-        className="rounded-full border px-4 py-1.5 text-sm hover:bg-secondary"
-      >
+      {error && <p className="text-sm text-destructive">صار خطأ، جرّب مرة ثانية</p>}
+      {user === null && (
+        <p className="text-xs text-muted-foreground">
+          <Link to="/auth" className="font-semibold text-primary hover:underline">سجّل دخول</Link> عشان ينحسب لك السكور
+        </p>
+      )}
+      <button onClick={reset} className="rounded-full border px-4 py-1.5 text-sm hover:bg-secondary">
         العب من جديد
       </button>
     </div>

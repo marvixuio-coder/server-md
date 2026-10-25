@@ -86,6 +86,18 @@ function ProfilePage() {
               <p dir="ltr" className="mt-1 text-muted-foreground">@{profile.username}</p>
               <p className="mt-3 text-sm text-muted-foreground">عضو من {joined}</p>
 
+              <div className="mt-6 grid grid-cols-2 gap-3">
+                <div className="rounded-2xl border bg-background p-4">
+                  <p className="text-xs text-muted-foreground">السكور 🏆</p>
+                  <p className="mt-1 font-display text-3xl font-bold">{profile.score}</p>
+                </div>
+                <div className="rounded-2xl border bg-background p-4">
+                  <p className="text-xs text-muted-foreground">النقاط 💎</p>
+                  <p className="mt-1 font-display text-3xl font-bold text-primary">{profile.points}</p>
+                </div>
+              </div>
+              <p className="mt-2 text-xs text-muted-foreground">كل فوز في X O = 50 سكور و 5 نقاط</p>
+
               <form onSubmit={save} className="mt-8 flex flex-col gap-2 text-start">
                 <label className="text-sm" htmlFor="display-name">غيّر اسمك</label>
                 <div className="flex gap-2">

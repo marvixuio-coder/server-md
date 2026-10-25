@@ -84,10 +84,10 @@ export const checkOwnerAccess = createServerFn({ method: "POST" }).handler(async
 export const getOwnerDashboard = createServerFn({ method: "POST" }).handler(async () => {
   if (!(await isOwner())) return { unlocked: false as const };
   const { supabaseAdmin: db } = await import("@/integrations/supabase/client.server");
-  const [members, memberCount, messages, messageCount, authUsers] = await Promise.all([
+  const [members, memberCount, messages, messageCount, authUsers, requests] = await Promise.all([
     db
       .from("profiles")
-      .select("id,username,display_name,created_at")
+      .select("id,username,display_name,created_at,score,points")
       .order("created_at", { ascending: false })
       .limit(500),
     db.from("profiles").select("id", { count: "exact", head: true }),
@@ -98,9 +98,14 @@ export const getOwnerDashboard = createServerFn({ method: "POST" }).handler(asyn
       .limit(300),
     db.from("community_messages").select("id", { count: "exact", head: true }),
     db.auth.admin.listUsers({ page: 1, perPage: 1000 }),
+    db
+      .from("shop_requests")
+      .select("id,user_id,kind,price,status,created_at")
+      .order("created_at", { ascending: false })
+      .limit(300),
   ]);
-  if (members.error || messages.error || authUsers.error)
-    console.error(members.error ?? messages.error ?? authUsers.error);
+  if (members.error || messages.error || authUsers.error || requests.error)
+    console.error(members.error ?? messages.error ?? authUsers.error ?? requests.error);
 
   const lastSignIn = new Map<string, string | null>();
   for (const u of authUsers.data?.users ?? []) lastSignIn.set(u.id, u.last_sign_in_at ?? null);
@@ -110,6 +115,15 @@ export const getOwnerDashboard = createServerFn({ method: "POST" }).handler(asyn
     ...m,
     last_sign_in_at: lastSignIn.get(m.id) ?? null,
   }));
+
+  // Requesters may be older than the 500 newest members, so look them up directly.
+  const requestRows = requests.data ?? [];
+  const requesterIds = [...new Set(requestRows.map((r) => r.user_id))];
+  const { data: requesters } = requesterIds.length
+    ? await db.from("profiles").select("id,username,display_name,points").in("id", requesterIds)
+    : { data: [] as { id: string; username: string; display_name: string; points: number }[] };
+  const byId = new Map((requesters ?? []).map((p) => [p.id, p]));
+
   return {
     unlocked: true as const,
     memberCount: memberCount.count ?? 0,
@@ -121,6 +135,15 @@ export const getOwnerDashboard = createServerFn({ method: "POST" }).handler(asyn
       .length,
     members: memberRows,
     messages: messages.data ?? [],
+    requests: requestRows.map((r) => {
+      const p = byId.get(r.user_id);
+      return {
+        ...r,
+        username: p?.username ?? null,
+        display_name: p?.display_name ?? "حساب ممسوح",
+        points: p?.points ?? 0,
+      };
+    }),
   };
 });
 
@@ -143,6 +166,27 @@ export const deleteAllCommunityMessages = createServerFn({ method: "POST" }).han
   if (error) console.error(error);
   return { ok: !error };
 });
+
+export const completeShopRequest = createServerFn({ method: "POST" })
+  .validator((data: { id: string }) => ({ id: String(data?.id ?? "") }))
+  .handler(async ({ data }) => {
+    if (!(await isOwner()) || !uuidLike(data.id)) return { ok: false as const };
+    const { supabaseAdmin: db } = await import("@/integrations/supabase/client.server");
+    const { error } = await db.from("shop_requests").update({ status: "done" }).eq("id", data.id);
+    if (error) console.error(error);
+    return { ok: !error };
+  });
+
+/** Removes a request; a pending VIP purchase gets its points back. */
+export const rejectShopRequest = createServerFn({ method: "POST" })
+  .validator((data: { id: string }) => ({ id: String(data?.id ?? "") }))
+  .handler(async ({ data }) => {
+    if (!(await isOwner()) || !uuidLike(data.id)) return { ok: false as const };
+    const { supabaseAdmin: db } = await import("@/integrations/supabase/client.server");
+    const { error } = await db.rpc("remove_shop_request", { _id: data.id });
+    if (error) console.error(error);
+    return { ok: !error };
+  });
 
 export const deleteMember = createServerFn({ method: "POST" })
   .validator((data: { id: string }) => ({ id: String(data?.id ?? "") }))
