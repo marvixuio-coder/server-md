@@ -89,6 +89,7 @@ export type Database = {
           id: string
           kind: string
           price: number
+          proof: string | null
           status: string
           user_id: string
         }
@@ -97,6 +98,7 @@ export type Database = {
           id?: string
           kind: string
           price?: number
+          proof?: string | null
           status?: string
           user_id: string
         }
@@ -105,6 +107,7 @@ export type Database = {
           id?: string
           kind?: string
           price?: number
+          proof?: string | null
           status?: string
           user_id?: string
         }
@@ -173,7 +176,10 @@ export type Database = {
       }
       owner_ids: { Args: never; Returns: string[] }
       remove_shop_request: { Args: { _id: string }; Returns: boolean }
-      request_shop_item: { Args: { _kind: string }; Returns: string }
+      request_shop_item: {
+        Args: { _kind: string; _proof?: string }
+        Returns: string
+      }
     }
     Enums: {
       app_role: "owner"

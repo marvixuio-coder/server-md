@@ -36,6 +36,13 @@
       "when": 1792828095268,
       "tag": "0004_scores_points_and_shop_requests",
       "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1792907719906,
+      "tag": "0005_shop_request_proof",
+      "breakpoints": true
     }
   ]
 }
