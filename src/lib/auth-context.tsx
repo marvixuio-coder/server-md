@@ -37,7 +37,7 @@ export function profileQueryKey(userId: string) {
 export async function fetchProfile(userId: string) {
   const { data, error } = await supabase
     .from("profiles")
-    .select("id,username,display_name,created_at")
+    .select("id,username,display_name,created_at,score,points")
     .eq("id", userId)
     .maybeSingle();
   if (error) throw error;

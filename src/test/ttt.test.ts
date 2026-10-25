@@ -21,9 +21,9 @@ describe("X O AI", () => {
 
   it("plays a random free cell the other 20%", () => {
     const board = fromBoardString("XX_O_____");
-    const rolls = [0.85, 0];
+    const rolls = [0.85, 0.99];
     const cell = aiMove(board, () => rolls.shift() ?? 0);
-    expect(cell).toBe(2); // first free cell picked by the random roll of 0
+    expect(cell).toBe(8); // random roll picks the last free cell instead of blocking at 2
   });
 });
 
