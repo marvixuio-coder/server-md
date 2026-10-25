@@ -8,6 +8,7 @@ import {
 } from "@/components/server-card";
 import { AccountButton } from "@/components/account-button";
 import { OwnerButton } from "@/components/owner-button";
+import { MyPoints, ShopButton } from "@/components/shop";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -138,6 +139,37 @@ function Index() {
           </div>
         </section>
 
+        <section className="mt-12 w-full">
+          <div className="flex flex-wrap items-end justify-between gap-2">
+            <h2 className="font-display text-3xl font-bold">الشوب 🛒</h2>
+            <p className="text-sm text-muted-foreground">
+              <MyPoints />
+            </p>
+          </div>
+          <p className="mt-1 text-sm text-muted-foreground">كل فوز في X O يعطيك 50 سكور و 5 نقاط</p>
+          <div className="mt-5 grid gap-4 sm:grid-cols-2">
+            <div className="rounded-2xl border-2 border-primary bg-card p-5 text-center shadow-[var(--shadow-glow)]">
+              <div className="text-4xl">👑</div>
+              <h3 className="mt-3 font-display text-2xl font-bold">VIP</h3>
+              <p className="mt-2 text-sm text-muted-foreground">رتبة VIP في السيرفر ومميزات ما يحصّلها غيرك</p>
+              <p className="mt-3 font-display text-3xl font-bold text-primary">700 نقطة</p>
+              <ShopButton kind="vip_buy">شراء VIP</ShopButton>
+            </div>
+            <div className="flex flex-col gap-4">
+              <div className="rounded-2xl border bg-card p-5 text-center">
+                <div className="text-4xl">🔥</div>
+                <h3 className="mt-3 font-display text-2xl font-bold">OG</h3>
+                <p className="mt-2 text-sm text-muted-foreground">رتبة OG للي معنا من البداية</p>
+                <ShopButton kind="og_buy">شراء OG</ShopButton>
+              </div>
+              <div className="rounded-2xl border bg-card p-5 text-center">
+                <h3 className="font-display text-xl font-semibold">مطالبة 🙋</h3>
+                <p className="mt-2 text-sm text-muted-foreground">تستاهل OG؟ طالب فيها والأونر يراجع طلبك</p>
+                <ShopButton kind="og_claim" variant="outline">مطالبة OG</ShopButton>
+              </div>
+            </div>
+          </div>
+        </section>
 
         <footer className="mt-14 text-sm text-muted-foreground">نشوفك داخل السيرفر 👋</footer>
       </div>
