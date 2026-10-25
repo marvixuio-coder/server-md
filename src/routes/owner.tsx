@@ -178,6 +178,11 @@ function OwnerPage() {
                       {r.price > 0 && ` · دفع ${r.price} نقطة`} · نقاطه الحين: {r.points}
                       {r.status === "done" && " · ✅ تم"}
                     </p>
+                    {r.proof && (
+                      <p className="mt-1 break-words rounded-lg bg-secondary/60 px-2 py-1 text-xs">
+                        الإثبات: {r.proof}
+                      </p>
+                    )}
                   </div>
                   <div className="flex shrink-0 gap-2">
                     {r.status === "pending" && (
