@@ -40,7 +40,7 @@ export function ShopButton({ kind, children, variant = "solid" }: { kind: ShopKi
   const [msg, setMsg] = useState<string | null>(null);
 
   const send = async () => {
-    if (!user) return setMsg(REPLIES.signed_out!);
+    if (!user) return setMsg(REPLIES["signed_out"]!);
     setBusy(true);
     setMsg(null);
     const { data, error } = await supabase.rpc("request_shop_item", { _kind: kind });
