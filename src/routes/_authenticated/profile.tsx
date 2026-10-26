@@ -96,7 +96,9 @@ function ProfilePage() {
                   <p className="mt-1 font-display text-3xl font-bold text-primary">{profile.points}</p>
                 </div>
               </div>
-              <p className="mt-2 text-xs text-muted-foreground">كل فوز في X O = 50 سكور و 5 نقاط</p>
+              <p className="mt-2 text-xs text-muted-foreground">
+                فوز X O = 50 سكور و 5 نقاط · لغز = 10 سكور · تفاحة = 1 سكور · كل 100 سكور تتحوّل لـ 5 نقاط
+              </p>
 
               <form onSubmit={save} className="mt-8 flex flex-col gap-2 text-start">
                 <label className="text-sm" htmlFor="display-name">غيّر اسمك</label>

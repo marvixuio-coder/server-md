@@ -8,7 +8,6 @@ import {
 } from "@/components/server-card";
 import { AccountButton } from "@/components/account-button";
 import { OwnerButton } from "@/components/owner-button";
-import { MyPoints, ShopButton } from "@/components/shop";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -63,35 +62,24 @@ function Index() {
           </ServerCard>
         </ul>
 
-        {/* خانة المتجر: نفس شكل خانة الديسكورد */}
-        <section className="server-card animate-rise relative mt-4 flex w-full flex-col rounded-2xl border p-5">
+        {/* خانة المتجر: نفس شكل خانة الديسكورد، تفتح صفحة المتجر */}
+        <Link
+          to="/shop"
+          className="server-card group animate-rise relative mt-4 flex w-full flex-col rounded-2xl border p-5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+        >
           <span className="absolute end-5 top-5 rounded-full bg-secondary px-3 py-1 text-xs font-medium text-muted-foreground">
-            <MyPoints />
+            VIP · OG
           </span>
           <div className="flex size-14 items-center justify-center rounded-2xl bg-primary text-3xl">🛒</div>
           <h2 className="mt-4 font-display text-2xl font-semibold tracking-wide">SHOP</h2>
           <p className="mt-1.5 text-sm leading-relaxed text-muted-foreground">
-            كل فوز في X O يعطيك 50 سكور و 5 نقاط، جمّع نقاطك واشترِ
+            جمّع سكور من الألعاب، حوّله لنقاط واشترِ VIP أو اطلب OG
           </p>
-          <div className="mt-5 grid gap-4 sm:grid-cols-2">
-            <div className="flex flex-col rounded-2xl border-2 border-primary bg-card p-5 text-center">
-              <div className="text-4xl">👑</div>
-              <h3 className="mt-3 font-display text-2xl font-bold">VIP</h3>
-              <p className="mt-2 text-sm text-muted-foreground">رتبة VIP في السيرفر ومميزات ما يحصّلها غيرك</p>
-              <p className="mt-3 font-display text-3xl font-bold text-primary">700 نقطة</p>
-              <ShopButton kind="vip_buy">شراء VIP</ShopButton>
-            </div>
-            <div className="flex flex-col rounded-2xl border-2 border-primary bg-card p-5 text-center">
-              <div className="text-4xl">🔥</div>
-              <h3 className="mt-3 font-display text-2xl font-bold">OG</h3>
-              <p className="mt-2 text-sm text-muted-foreground">رتبة OG للي معنا من البداية</p>
-              <p className="mt-3 font-display text-3xl font-bold text-primary">طلب</p>
-              <ShopButton kind="og_claim" proofLabel="الإثبات: بقالك قد إيه في السيرفر؟">
-                ارسل طلب OG
-              </ShopButton>
-            </div>
+          <div className="mt-5 flex items-center justify-between rounded-xl bg-primary px-4 py-3 font-semibold text-primary-foreground transition-colors group-hover:bg-accent group-hover:text-accent-foreground">
+            <span>ادخل المتجر 🛒</span>
+            <span aria-hidden="true">←</span>
           </div>
-        </section>
+        </Link>
 
         <Link
           to="/qr"

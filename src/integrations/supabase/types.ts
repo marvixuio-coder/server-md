@@ -83,6 +83,27 @@ export type Database = {
         }
         Relationships: []
       }
+      riddle_solves: {
+        Row: {
+          created_at: string
+          riddle_idx: number
+          solved: boolean
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          riddle_idx: number
+          solved: boolean
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          riddle_idx?: number
+          solved?: boolean
+          user_id?: string
+        }
+        Relationships: []
+      }
       shop_requests: {
         Row: {
           created_at: string
@@ -108,6 +129,33 @@ export type Database = {
           kind?: string
           price?: number
           proof?: string | null
+          status?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      snake_games: {
+        Row: {
+          apples: number
+          created_at: string
+          finished_at: string | null
+          id: string
+          status: string
+          user_id: string
+        }
+        Insert: {
+          apples?: number
+          created_at?: string
+          finished_at?: string | null
+          id?: string
+          status?: string
+          user_id: string
+        }
+        Update: {
+          apples?: number
+          created_at?: string
+          finished_at?: string | null
+          id?: string
           status?: string
           user_id?: string
         }
@@ -166,7 +214,12 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      award_score: {
+        Args: { _amount: number; _user_id: string }
+        Returns: undefined
+      }
       award_ttt_win: { Args: { _user_id: string }; Returns: undefined }
+      convert_score_to_points: { Args: never; Returns: number }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]

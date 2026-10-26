@@ -1,14 +1,16 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { TicTacToe } from "@/components/tic-tac-toe";
 import { Riddles } from "@/components/riddles";
+import { Snake } from "@/components/snake";
+import { ScoreBar } from "@/components/score-bar";
 
 export const Route = createFileRoute("/games")({
   head: () => ({
     meta: [
-      { title: "ألعاب MD — X O وألغاز" },
-      { name: "description", content: "العب X O ضد الذكاء الاصطناعي وحل الألغاز." },
-      { property: "og:title", content: "ألعاب MD — X O وألغاز" },
-      { property: "og:description", content: "العب X O ضد الذكاء الاصطناعي وحل الألغاز." },
+      { title: "ألعاب MD — X O وألغاز والتعبان" },
+      { name: "description", content: "العب X O ضد الذكاء الاصطناعي، حل الألغاز، والعب التعبان واجمع سكور." },
+      { property: "og:title", content: "ألعاب MD — X O وألغاز والتعبان" },
+      { property: "og:description", content: "العب X O ضد الذكاء الاصطناعي، حل الألغاز، والعب التعبان واجمع سكور." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
     ],
@@ -25,16 +27,21 @@ function Games() {
           → رجوع
         </Link>
         <h1 className="font-display text-4xl font-bold">بدأ التحدي 🎮</h1>
+        <ScoreBar />
         <div className="grid w-full gap-4 sm:grid-cols-2">
-        <section className="aspect-square rounded-2xl border bg-card p-5 text-center">
-          <h2 className="font-display text-2xl font-bold">X O</h2>
-          <p className="mt-2 mb-5 text-sm text-muted-foreground">العب ضد الذكاء الاصطناعي</p>
-          <TicTacToe />
-        </section>
-        <section className="aspect-square overflow-y-auto rounded-2xl border bg-card p-5 text-center">
-          <h2 className="mb-5 font-display text-2xl font-bold">ألغاز 🧩</h2>
-          <Riddles />
-        </section>
+          <section className="aspect-square rounded-2xl border bg-card p-5 text-center">
+            <h2 className="font-display text-2xl font-bold">X O</h2>
+            <p className="mt-2 mb-5 text-sm text-muted-foreground">العب ضد الذكاء الاصطناعي</p>
+            <TicTacToe />
+          </section>
+          <section className="aspect-square overflow-y-auto rounded-2xl border bg-card p-5 text-center">
+            <h2 className="mb-3 font-display text-2xl font-bold">ألغاز 🧩</h2>
+            <Riddles />
+          </section>
+          <section className="rounded-2xl border bg-card p-5 text-center sm:col-span-2">
+            <h2 className="mb-3 font-display text-2xl font-bold">التعبان 🐍</h2>
+            <Snake />
+          </section>
         </div>
       </div>
     </main>
