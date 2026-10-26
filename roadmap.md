@@ -15,3 +15,6 @@
 - [x] Shop on home page: VIP 700 points, OG buy, OG claim; requests box in the control panel under the bot card
 - [x] AI chat: never shares site code, says it was made by matrosh
 - [x] SHOP box under the Discord card: VIP (700 points) and OG request with proof of time in server, same size
+- [x] Shop moved to its own page (/shop), home card links to it
+- [x] Riddles give score (10 each), score bar on games page, convert 100 score -> 5 points
+- [x] Snake game: 15x15 board, each apple = 1 score, snake grows
