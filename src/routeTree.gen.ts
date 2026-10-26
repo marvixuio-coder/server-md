@@ -21,6 +21,7 @@ import { Route as ShopRouteImport } from './routes/shop'
 import { Route as AuthenticatedProfileRouteImport } from './routes/_authenticated/profile'
 import { Route as ApiChatRouteImport } from './routes/api/chat'
 import { Route as OwnerBotRouteImport } from './routes/owner_.bot'
+import { Route as OwnerMeetingRouteImport } from './routes/owner_.meeting'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -81,6 +82,11 @@ const OwnerBotRoute = OwnerBotRouteImport.update({
   path: '/owner/bot',
   getParentRoute: () => rootRouteImport,
 } as any)
+const OwnerMeetingRoute = OwnerMeetingRouteImport.update({
+  id: '/owner_/meeting',
+  path: '/owner/meeting',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -94,6 +100,7 @@ export interface FileRoutesByFullPath {
   '/profile': typeof AuthenticatedProfileRoute
   '/api/chat': typeof ApiChatRoute
   '/owner/bot': typeof OwnerBotRoute
+  '/owner/meeting': typeof OwnerMeetingRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -107,6 +114,7 @@ export interface FileRoutesByTo {
   '/profile': typeof AuthenticatedProfileRoute
   '/api/chat': typeof ApiChatRoute
   '/owner/bot': typeof OwnerBotRoute
+  '/owner/meeting': typeof OwnerMeetingRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -122,6 +130,7 @@ export interface FileRoutesById {
   '/_authenticated/profile': typeof AuthenticatedProfileRoute
   '/api/chat': typeof ApiChatRoute
   '/owner_/bot': typeof OwnerBotRoute
+  '/owner_/meeting': typeof OwnerMeetingRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -137,6 +146,7 @@ export interface FileRouteTypes {
     | '/profile'
     | '/api/chat'
     | '/owner/bot'
+    | '/owner/meeting'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -150,6 +160,7 @@ export interface FileRouteTypes {
     | '/profile'
     | '/api/chat'
     | '/owner/bot'
+    | '/owner/meeting'
   id:
     | '__root__'
     | '/'
@@ -164,6 +175,7 @@ export interface FileRouteTypes {
     | '/_authenticated/profile'
     | '/api/chat'
     | '/owner_/bot'
+    | '/owner_/meeting'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -178,6 +190,7 @@ export interface RootRouteChildren {
   ShopRoute: typeof ShopRoute
   ApiChatRoute: typeof ApiChatRoute
   OwnerBotRoute: typeof OwnerBotRoute
+  OwnerMeetingRoute: typeof OwnerMeetingRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -266,6 +279,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof OwnerBotRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/owner_/meeting': {
+      id: '/owner_/meeting'
+      path: '/owner/meeting'
+      fullPath: '/owner/meeting'
+      preLoaderRoute: typeof OwnerMeetingRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -292,6 +312,7 @@ const rootRouteChildren: RootRouteChildren = {
   ShopRoute: ShopRoute,
   ApiChatRoute: ApiChatRoute,
   OwnerBotRoute: OwnerBotRoute,
+  OwnerMeetingRoute: OwnerMeetingRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
