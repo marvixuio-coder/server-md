@@ -8,7 +8,6 @@ import {
 } from "@/components/server-card";
 import { AccountButton } from "@/components/account-button";
 import { OwnerButton } from "@/components/owner-button";
-import { MyPoints, ShopButton } from "@/components/shop";
 
 export const Route = createFileRoute("/")({
   head: () => ({

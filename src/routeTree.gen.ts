@@ -17,6 +17,7 @@ import { Route as CommunityRouteImport } from './routes/community'
 import { Route as GamesRouteImport } from './routes/games'
 import { Route as OwnerRouteImport } from './routes/owner'
 import { Route as QrRouteImport } from './routes/qr'
+import { Route as ShopRouteImport } from './routes/shop'
 import { Route as AuthenticatedProfileRouteImport } from './routes/_authenticated/profile'
 import { Route as ApiChatRouteImport } from './routes/api/chat'
 import { Route as OwnerBotRouteImport } from './routes/owner_.bot'
@@ -60,6 +61,11 @@ const QrRoute = QrRouteImport.update({
   path: '/qr',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ShopRoute = ShopRouteImport.update({
+  id: '/shop',
+  path: '/shop',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AuthenticatedProfileRoute = AuthenticatedProfileRouteImport.update({
   id: '/profile',
   path: '/profile',
@@ -84,6 +90,7 @@ export interface FileRoutesByFullPath {
   '/games': typeof GamesRoute
   '/owner': typeof OwnerRoute
   '/qr': typeof QrRoute
+  '/shop': typeof ShopRoute
   '/profile': typeof AuthenticatedProfileRoute
   '/api/chat': typeof ApiChatRoute
   '/owner/bot': typeof OwnerBotRoute
@@ -96,6 +103,7 @@ export interface FileRoutesByTo {
   '/games': typeof GamesRoute
   '/owner': typeof OwnerRoute
   '/qr': typeof QrRoute
+  '/shop': typeof ShopRoute
   '/profile': typeof AuthenticatedProfileRoute
   '/api/chat': typeof ApiChatRoute
   '/owner/bot': typeof OwnerBotRoute
@@ -110,6 +118,7 @@ export interface FileRoutesById {
   '/games': typeof GamesRoute
   '/owner': typeof OwnerRoute
   '/qr': typeof QrRoute
+  '/shop': typeof ShopRoute
   '/_authenticated/profile': typeof AuthenticatedProfileRoute
   '/api/chat': typeof ApiChatRoute
   '/owner_/bot': typeof OwnerBotRoute
@@ -124,6 +133,7 @@ export interface FileRouteTypes {
     | '/games'
     | '/owner'
     | '/qr'
+    | '/shop'
     | '/profile'
     | '/api/chat'
     | '/owner/bot'
@@ -136,6 +146,7 @@ export interface FileRouteTypes {
     | '/games'
     | '/owner'
     | '/qr'
+    | '/shop'
     | '/profile'
     | '/api/chat'
     | '/owner/bot'
@@ -149,6 +160,7 @@ export interface FileRouteTypes {
     | '/games'
     | '/owner'
     | '/qr'
+    | '/shop'
     | '/_authenticated/profile'
     | '/api/chat'
     | '/owner_/bot'
@@ -163,6 +175,7 @@ export interface RootRouteChildren {
   GamesRoute: typeof GamesRoute
   OwnerRoute: typeof OwnerRoute
   QrRoute: typeof QrRoute
+  ShopRoute: typeof ShopRoute
   ApiChatRoute: typeof ApiChatRoute
   OwnerBotRoute: typeof OwnerBotRoute
 }
@@ -225,6 +238,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof QrRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/shop': {
+      id: '/shop'
+      path: '/shop'
+      fullPath: '/shop'
+      preLoaderRoute: typeof ShopRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/_authenticated/profile': {
       id: '/_authenticated/profile'
       path: '/profile'
@@ -269,6 +289,7 @@ const rootRouteChildren: RootRouteChildren = {
   GamesRoute: GamesRoute,
   OwnerRoute: OwnerRoute,
   QrRoute: QrRoute,
+  ShopRoute: ShopRoute,
   ApiChatRoute: ApiChatRoute,
   OwnerBotRoute: OwnerBotRoute,
 }
