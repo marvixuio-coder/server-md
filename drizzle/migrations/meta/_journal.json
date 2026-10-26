@@ -43,6 +43,13 @@
       "when": 1792907719906,
       "tag": "0005_shop_request_proof",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1792999092928,
+      "tag": "0006_riddle_snake_scores_and_conversion",
+      "breakpoints": true
     }
   ]
 }
