@@ -152,6 +152,18 @@ function OwnerPage() {
           <span className="text-2xl text-muted-foreground">←</span>
         </Link>
 
+        <Link
+          to="/owner/meeting"
+          className="mt-4 flex items-center gap-4 rounded-2xl border-2 border-primary bg-card p-5 shadow-[var(--shadow-glow)] transition hover:scale-[1.01]"
+        >
+          <div className="flex size-14 shrink-0 items-center justify-center rounded-2xl bg-primary text-3xl">🎙️</div>
+          <div className="min-w-0 flex-1">
+            <h2 className="font-display text-2xl font-bold">اجتماع الاونرز</h2>
+            <p className="text-sm text-muted-foreground">روم صوتي للأونرز: ادخل المكالمة، شغّل الميك، واطلع وقت ما تبي.</p>
+          </div>
+          <span className="text-2xl text-muted-foreground">←</span>
+        </Link>
+
         <section className="mt-6 rounded-2xl border bg-card p-5">
           <h2 className="font-display text-xl font-semibold">
             🛒 الطلبات <span className="text-sm font-normal text-muted-foreground">— مين طلب من الشوب وبأي حساب</span>
