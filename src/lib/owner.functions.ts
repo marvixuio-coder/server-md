@@ -26,14 +26,14 @@ function sessionConfig() {
   };
 }
 
-/** Signed-in account that has the owner role (checked as the user, through RLS-safe has_role). */
-async function signedInOwner(): Promise<boolean> {
+/** The signed-in caller (from the bearer token), with a client acting as them. */
+async function bearerUser() {
   const header = getRequest()?.headers.get("authorization");
-  if (!header?.startsWith("Bearer ")) return false;
+  if (!header?.startsWith("Bearer ")) return null;
   const token = header.slice(7);
   const url = process.env["SUPABASE_URL"];
   const key = process.env["SUPABASE_PUBLISHABLE_KEY"];
-  if (!url || !key) return false;
+  if (!url || !key) return null;
   const client = createClient<Database>(url, key, {
     auth: { storage: undefined, persistSession: false, autoRefreshToken: false },
     global: {
@@ -46,9 +46,16 @@ async function signedInOwner(): Promise<boolean> {
     },
   });
   const { data: userData, error } = await client.auth.getUser(token);
-  if (error || !userData.user) return false;
-  const { data: isOwnerRole } = await client.rpc("has_role", {
-    _user_id: userData.user.id,
+  if (error || !userData.user) return null;
+  return { client, userId: userData.user.id };
+}
+
+/** Signed-in account that has the owner role (checked as the user, through RLS-safe has_role). */
+async function signedInOwner(): Promise<boolean> {
+  const user = await bearerUser();
+  if (!user) return false;
+  const { data: isOwnerRole } = await user.client.rpc("has_role", {
+    _user_id: user.userId,
     _role: "owner",
   });
   return isOwnerRole === true;
@@ -59,6 +66,38 @@ async function isOwner() {
   if (session.data.owner === true) return true;
   return signedInOwner();
 }
+
+/**
+ * Voice meeting for owners: hands out an unguessable room key (derived from a
+ * server secret) only after the owner check, plus the caller's display name.
+ */
+export const getMeetingRoom = createServerFn({ method: "POST" }).handler(async () => {
+  if (!(await isOwner())) return { owner: false as const };
+  const secret = process.env["OWNER_SESSION_SECRET"];
+  if (!secret) throw new Error("OWNER_SESSION_SECRET is not set");
+  const enc = new TextEncoder();
+  const cryptoKey = await crypto.subtle.importKey(
+    "raw",
+    enc.encode(secret),
+    { name: "HMAC", hash: "SHA-256" },
+    false,
+    ["sign"],
+  );
+  const sig = new Uint8Array(await crypto.subtle.sign("HMAC", cryptoKey, enc.encode("owners-meeting-v1")));
+  const room = Array.from(sig.slice(0, 16), (b) => b.toString(16).padStart(2, "0")).join("");
+
+  let name = "أونر";
+  const user = await bearerUser();
+  if (user) {
+    const { data: profile } = await user.client
+      .from("profiles")
+      .select("display_name")
+      .eq("id", user.userId)
+      .maybeSingle();
+    if (profile?.display_name) name = profile.display_name;
+  }
+  return { owner: true as const, room, name, userId: user?.userId ?? null };
+});
 
 export const unlockOwner = createServerFn({ method: "POST" })
   .validator((data: { password: string }) => ({ password: String(data?.password ?? "").slice(0, 200) }))
